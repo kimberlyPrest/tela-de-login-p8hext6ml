@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Calendar,
   DollarSign,
@@ -22,6 +23,12 @@ import { cn } from '@/lib/utils'
 import { NovaVagaDialog } from '@/components/vagas/NovaVagaDialog'
 
 export default function Vagas() {
+  const [vacancies, setVacancies] = useState<Vacancy[]>(mockVacancies)
+
+  const handleAddVacancy = (newVacancy: Vacancy) => {
+    setVacancies((prev) => [newVacancy, ...prev])
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl pb-24">
       {/* Action Bar */}
@@ -35,12 +42,12 @@ export default function Vagas() {
             oportunidade.
           </p>
         </div>
-        <NovaVagaDialog />
+        <NovaVagaDialog onAddVacancy={handleAddVacancy} />
       </div>
 
       {/* Vacancy Dashboard */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-        {mockVacancies.map((vacancy, index) => (
+        {vacancies.map((vacancy, index) => (
           <div
             key={vacancy.id}
             className="animate-in fade-in slide-in-from-bottom-4"

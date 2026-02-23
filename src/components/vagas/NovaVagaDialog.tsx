@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useState, useEffect } from 'react'
+import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { CalendarIcon, Plus, Building2, MapPin, Briefcase } from 'lucide-react'
+import { CalendarIcon, Plus, MapPin, Briefcase, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
@@ -40,6 +40,7 @@ import {
 } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
+import { Vacancy } from '@/lib/mock-data'
 
 const formSchema = z
   .object({
@@ -58,6 +59,18 @@ const formSchema = z
     }),
     cep: z.string().optional(),
     distance: z.string().optional(),
+    equipmentQuestion: z
+      .string()
+      .min(5, 'A pergunta obrigatória não pode ficar vazia.'),
+    customQuestions: z
+      .array(
+        z.object({
+          question: z
+            .string()
+            .min(3, 'A pergunta deve ter pelo menos 3 caracteres.'),
+        }),
+      )
+      .default([]),
   })
   .superRefine((data, ctx) => {
     if (data.type === 'Presencial') {
@@ -80,7 +93,11 @@ const formSchema = z
 
 type FormValues = z.infer<typeof formSchema>
 
-export function NovaVagaDialog() {
+interface NovaVagaDialogProps {
+  onAddVacancy?: (vacancy: Vacancy) => void
+}
+
+export function NovaVagaDialog({ onAddVacancy }: NovaVagaDialogProps) {
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState(1)
 
@@ -97,20 +114,59 @@ export function NovaVagaDialog() {
       type: 'Presencial',
       cep: '',
       distance: '',
+      equipmentQuestion: 'Qual modelo de celular você possui?',
+      customQuestions: [],
     },
   })
 
   const watchType = form.watch('type')
 
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'customQuestions',
+  })
+
+  useEffect(() => {
+    if (watchType === 'Home Office') {
+      form.setValue(
+        'equipmentQuestion',
+        'Qual modelo de notebook/computador você possui?',
+      )
+    } else {
+      form.setValue('equipmentQuestion', 'Qual modelo de celular você possui?')
+    }
+  }, [watchType, form])
+
   const onNext = async () => {
-    const isValid = await form.trigger()
+    const isValid = await form.trigger([
+      'title',
+      'service',
+      'value',
+      'availability',
+      'requirements',
+      'serviceDate',
+      'contact',
+      'type',
+      'cep',
+      'distance',
+    ])
     if (isValid) {
       setStep(2)
     }
   }
 
   const onSubmit = (data: FormValues) => {
-    console.log('Submitting data:', data)
+    if (onAddVacancy) {
+      onAddVacancy({
+        id: Math.random().toString(36).substr(2, 9),
+        title: data.title,
+        service: data.service,
+        value: Number(data.value),
+        type: data.type as any,
+        serviceDate: data.serviceDate.toISOString().split('T')[0],
+        status: 'Ativo',
+      })
+    }
     setOpen(false)
     setStep(1)
     form.reset()
@@ -143,7 +199,7 @@ export function NovaVagaDialog() {
             <DialogDescription className="mt-1 text-muted-foreground">
               {step === 1
                 ? 'Preencha os dados essenciais da vaga.'
-                : 'Revise e publique a vaga.'}
+                : 'Defina as perguntas para os candidatos.'}
             </DialogDescription>
           </DialogHeader>
           <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
@@ -451,43 +507,109 @@ export function NovaVagaDialog() {
               )}
 
               {step === 2 && (
-                <div className="py-12 flex flex-col items-center justify-center text-center animate-in fade-in slide-in-from-right-4 duration-300">
-                  <div className="w-16 h-16 bg-success/15 text-success rounded-full flex items-center justify-center mb-5 shadow-sm">
-                    <Building2 className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-xl font-bold text-secondary mb-2">
-                    Etapa 2: Configurações Adicionais
-                  </h3>
-                  <p className="text-muted-foreground max-w-sm mb-8">
-                    Aqui você poderia configurar testes técnicos, formulários
-                    personalizados e permissões de acesso.
-                  </p>
-                  <div className="p-5 bg-muted/30 rounded-lg text-sm text-left w-full max-w-md border border-border shadow-sm">
-                    <p className="font-semibold mb-3 text-secondary border-b border-border pb-2">
-                      Resumo da Vaga:
+                <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                  <div className="mb-4">
+                    <h3 className="text-lg font-bold text-secondary flex items-center gap-2 mb-1">
+                      Perguntas para o Candidato
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Defina as perguntas que os candidatos deverão responder ao
+                      se candidatarem para esta vaga.
                     </p>
-                    <ul className="space-y-2 text-muted-foreground">
-                      <li className="flex justify-between">
-                        <span className="font-medium text-secondary">
-                          Título:
-                        </span>{' '}
-                        <span>{form.getValues('title')}</span>
-                      </li>
-                      <li className="flex justify-between">
-                        <span className="font-medium text-secondary">
-                          Tipo:
-                        </span>{' '}
-                        <span>{form.getValues('type')}</span>
-                      </li>
-                      <li className="flex justify-between">
-                        <span className="font-medium text-secondary">
-                          Valor:
-                        </span>{' '}
-                        <span className="text-success font-medium">
-                          R$ {form.getValues('value')}
-                        </span>
-                      </li>
-                    </ul>
+                  </div>
+
+                  <div className="p-5 bg-muted/20 rounded-lg border border-border space-y-4">
+                    <h4 className="font-semibold text-secondary text-sm uppercase tracking-wider">
+                      Pergunta Automática
+                    </h4>
+                    <FormField
+                      control={form.control}
+                      name="equipmentQuestion"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-secondary flex items-center gap-1">
+                            Equipamento Necessário
+                            <span className="text-destructive">*</span>
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="focus-visible:ring-accent bg-background"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between border-b border-border pb-2">
+                      <h4 className="font-semibold text-secondary text-sm uppercase tracking-wider">
+                        Perguntas Personalizadas
+                      </h4>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => append({ question: '' })}
+                        className="text-primary border-primary/20 hover:bg-primary/10 h-8 text-xs"
+                      >
+                        <Plus className="w-3.5 h-3.5 mr-1" />
+                        Adicionar Pergunta
+                      </Button>
+                    </div>
+
+                    <div className="space-y-3">
+                      {fields.map((item, index) => (
+                        <div
+                          key={item.id}
+                          className="flex gap-3 items-start animate-in fade-in slide-in-from-left-2 duration-200"
+                        >
+                          <div className="mt-2.5 w-6 h-6 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-muted-foreground shrink-0">
+                            {index + 1}
+                          </div>
+                          <FormField
+                            control={form.control}
+                            name={`customQuestions.${index}.question`}
+                            render={({ field }) => (
+                              <FormItem className="flex-1">
+                                <FormControl>
+                                  <Input
+                                    placeholder="Digite a pergunta para o candidato..."
+                                    className="focus-visible:ring-accent"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => remove(index)}
+                            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 mt-0.5"
+                            title="Remover pergunta"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+
+                      {fields.length === 0 && (
+                        <div className="py-8 text-center bg-muted/10 rounded-lg border border-dashed border-border/60">
+                          <p className="text-sm text-muted-foreground">
+                            Nenhuma pergunta personalizada adicionada.
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Clique em "Adicionar Pergunta" para incluir
+                            requisitos específicos.
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
@@ -526,7 +648,7 @@ export function NovaVagaDialog() {
                     type="submit"
                     className="bg-success hover:bg-success/90 text-white min-w-[120px] shadow-sm tap-effect"
                   >
-                    Publicar Vaga
+                    Salvar Vaga
                   </Button>
                 )}
               </div>

@@ -18940,28 +18940,6 @@ var Briefcase = createLucideIcon("briefcase", [["path", {
 	rx: "2",
 	key: "i6l2r4"
 }]]);
-var Building2 = createLucideIcon("building-2", [
-	["path", {
-		d: "M10 12h4",
-		key: "a56b0p"
-	}],
-	["path", {
-		d: "M10 8h4",
-		key: "1sr2af"
-	}],
-	["path", {
-		d: "M14 21v-3a2 2 0 0 0-4 0v3",
-		key: "1rgiei"
-	}],
-	["path", {
-		d: "M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2",
-		key: "secmi2"
-	}],
-	["path", {
-		d: "M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16",
-		key: "16ra0t"
-	}]
-]);
 var Calendar = createLucideIcon("calendar", [
 	["path", {
 		d: "M8 2v4",
@@ -19162,6 +19140,28 @@ var Plus = createLucideIcon("plus", [["path", {
 	d: "M12 5v14",
 	key: "s699le"
 }]]);
+var Trash2 = createLucideIcon("trash-2", [
+	["path", {
+		d: "M10 11v6",
+		key: "nco0om"
+	}],
+	["path", {
+		d: "M14 11v6",
+		key: "outv1u"
+	}],
+	["path", {
+		d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6",
+		key: "miytrc"
+	}],
+	["path", {
+		d: "M3 6h18",
+		key: "d0wm0j"
+	}],
+	["path", {
+		d: "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2",
+		key: "e791ji"
+	}]
+]);
 var X = createLucideIcon("x", [["path", {
 	d: "M18 6 6 18",
 	key: "1bl5f8"
@@ -25412,6 +25412,248 @@ function createFormControl(props = {}) {
 	return {
 		...methods,
 		formControl: methods
+	};
+}
+var generateId = () => {
+	if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+	const d = typeof performance === "undefined" ? Date.now() : performance.now() * 1e3;
+	return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+		const r$2 = (Math.random() * 16 + d) % 16 | 0;
+		return (c == "x" ? r$2 : r$2 & 3 | 8).toString(16);
+	});
+};
+var getFocusFieldName = (name, index$1, options$1 = {}) => options$1.shouldFocus || isUndefined(options$1.shouldFocus) ? options$1.focusName || `${name}.${isUndefined(options$1.focusIndex) ? index$1 : options$1.focusIndex}.` : "";
+var appendAt = (data, value) => [...data, ...convertToArrayPayload(value)];
+var fillEmptyArray = (value) => Array.isArray(value) ? value.map(() => void 0) : void 0;
+function insert(data, index$1, value) {
+	return [
+		...data.slice(0, index$1),
+		...convertToArrayPayload(value),
+		...data.slice(index$1)
+	];
+}
+var moveArrayAt = (data, from, to) => {
+	if (!Array.isArray(data)) return [];
+	if (isUndefined(data[to])) data[to] = void 0;
+	data.splice(to, 0, data.splice(from, 1)[0]);
+	return data;
+};
+var prependAt = (data, value) => [...convertToArrayPayload(value), ...convertToArrayPayload(data)];
+function removeAtIndexes(data, indexes) {
+	let i$2 = 0;
+	const temp = [...data];
+	for (const index$1 of indexes) {
+		temp.splice(index$1 - i$2, 1);
+		i$2++;
+	}
+	return compact(temp).length ? temp : [];
+}
+var removeArrayAt = (data, index$1) => isUndefined(index$1) ? [] : removeAtIndexes(data, convertToArrayPayload(index$1).sort((a$1, b$1) => a$1 - b$1));
+var swapArrayAt = (data, indexA, indexB) => {
+	[data[indexA], data[indexB]] = [data[indexB], data[indexA]];
+};
+var updateAt = (fieldValues, index$1, value) => {
+	fieldValues[index$1] = value;
+	return fieldValues;
+};
+function useFieldArray(props) {
+	const formControl = useFormControlContext();
+	const { control = formControl, name, keyName = "id", shouldUnregister, rules } = props;
+	const [fields, setFields] = import_react.useState(control._getFieldArray(name));
+	const ids = import_react.useRef(control._getFieldArray(name).map(generateId));
+	const _actioned = import_react.useRef(false);
+	control._names.array.add(name);
+	import_react.useMemo(() => rules && fields.length >= 0 && control.register(name, rules), [
+		control,
+		name,
+		fields.length,
+		rules
+	]);
+	useIsomorphicLayoutEffect$1(() => control._subjects.array.subscribe({ next: ({ values, name: fieldArrayName }) => {
+		if (fieldArrayName === name || !fieldArrayName) {
+			const fieldValues = get(values, name);
+			if (Array.isArray(fieldValues)) {
+				setFields(fieldValues);
+				ids.current = fieldValues.map(generateId);
+			}
+		}
+	} }).unsubscribe, [control, name]);
+	const updateValues = import_react.useCallback((updatedFieldArrayValues) => {
+		_actioned.current = true;
+		control._setFieldArray(name, updatedFieldArrayValues);
+	}, [control, name]);
+	const append = (value, options$1) => {
+		const appendValue = convertToArrayPayload(cloneObject(value));
+		const updatedFieldArrayValues = appendAt(control._getFieldArray(name), appendValue);
+		control._names.focus = getFocusFieldName(name, updatedFieldArrayValues.length - 1, options$1);
+		ids.current = appendAt(ids.current, appendValue.map(generateId));
+		updateValues(updatedFieldArrayValues);
+		setFields(updatedFieldArrayValues);
+		control._setFieldArray(name, updatedFieldArrayValues, appendAt, { argA: fillEmptyArray(value) });
+	};
+	const prepend = (value, options$1) => {
+		const prependValue = convertToArrayPayload(cloneObject(value));
+		const updatedFieldArrayValues = prependAt(control._getFieldArray(name), prependValue);
+		control._names.focus = getFocusFieldName(name, 0, options$1);
+		ids.current = prependAt(ids.current, prependValue.map(generateId));
+		updateValues(updatedFieldArrayValues);
+		setFields(updatedFieldArrayValues);
+		control._setFieldArray(name, updatedFieldArrayValues, prependAt, { argA: fillEmptyArray(value) });
+	};
+	const remove = (index$1) => {
+		const updatedFieldArrayValues = removeArrayAt(control._getFieldArray(name), index$1);
+		ids.current = removeArrayAt(ids.current, index$1);
+		updateValues(updatedFieldArrayValues);
+		setFields(updatedFieldArrayValues);
+		!Array.isArray(get(control._fields, name)) && set(control._fields, name, void 0);
+		control._setFieldArray(name, updatedFieldArrayValues, removeArrayAt, { argA: index$1 });
+	};
+	const insert$1 = (index$1, value, options$1) => {
+		const insertValue = convertToArrayPayload(cloneObject(value));
+		const updatedFieldArrayValues = insert(control._getFieldArray(name), index$1, insertValue);
+		control._names.focus = getFocusFieldName(name, index$1, options$1);
+		ids.current = insert(ids.current, index$1, insertValue.map(generateId));
+		updateValues(updatedFieldArrayValues);
+		setFields(updatedFieldArrayValues);
+		control._setFieldArray(name, updatedFieldArrayValues, insert, {
+			argA: index$1,
+			argB: fillEmptyArray(value)
+		});
+	};
+	const swap = (indexA, indexB) => {
+		const updatedFieldArrayValues = control._getFieldArray(name);
+		swapArrayAt(updatedFieldArrayValues, indexA, indexB);
+		swapArrayAt(ids.current, indexA, indexB);
+		updateValues(updatedFieldArrayValues);
+		setFields(updatedFieldArrayValues);
+		control._setFieldArray(name, updatedFieldArrayValues, swapArrayAt, {
+			argA: indexA,
+			argB: indexB
+		}, false);
+	};
+	const move = (from, to) => {
+		const updatedFieldArrayValues = control._getFieldArray(name);
+		moveArrayAt(updatedFieldArrayValues, from, to);
+		moveArrayAt(ids.current, from, to);
+		updateValues(updatedFieldArrayValues);
+		setFields(updatedFieldArrayValues);
+		control._setFieldArray(name, updatedFieldArrayValues, moveArrayAt, {
+			argA: from,
+			argB: to
+		}, false);
+	};
+	const update = (index$1, value) => {
+		const updateValue = cloneObject(value);
+		const updatedFieldArrayValues = updateAt(control._getFieldArray(name), index$1, updateValue);
+		ids.current = [...updatedFieldArrayValues].map((item, i$2) => !item || i$2 === index$1 ? generateId() : ids.current[i$2]);
+		updateValues(updatedFieldArrayValues);
+		setFields([...updatedFieldArrayValues]);
+		control._setFieldArray(name, updatedFieldArrayValues, updateAt, {
+			argA: index$1,
+			argB: updateValue
+		}, true, false);
+	};
+	const replace = (value) => {
+		const updatedFieldArrayValues = convertToArrayPayload(cloneObject(value));
+		ids.current = updatedFieldArrayValues.map(generateId);
+		updateValues([...updatedFieldArrayValues]);
+		setFields([...updatedFieldArrayValues]);
+		control._setFieldArray(name, [...updatedFieldArrayValues], (data) => data, {}, true, false);
+	};
+	import_react.useEffect(() => {
+		control._state.action = false;
+		isWatched(name, control._names) && control._subjects.state.next({ ...control._formState });
+		if (_actioned.current && (!getValidationModes(control._options.mode).isOnSubmit || control._formState.isSubmitted) && !getValidationModes(control._options.reValidateMode).isOnSubmit) if (control._options.resolver) control._runSchema([name]).then((result) => {
+			control._updateIsValidating([name]);
+			const error = get(result.errors, name);
+			const existingError = get(control._formState.errors, name);
+			if (existingError ? !error && existingError.type || error && (existingError.type !== error.type || existingError.message !== error.message) : error && error.type) {
+				error ? set(control._formState.errors, name, error) : unset(control._formState.errors, name);
+				control._subjects.state.next({ errors: control._formState.errors });
+			}
+		});
+		else {
+			const field = get(control._fields, name);
+			if (field && field._f && !(getValidationModes(control._options.reValidateMode).isOnSubmit && getValidationModes(control._options.mode).isOnSubmit)) validateField(field, control._names.disabled, control._formValues, control._options.criteriaMode === VALIDATION_MODE.all, control._options.shouldUseNativeValidation, true).then((error) => !isEmptyObject(error) && control._subjects.state.next({ errors: updateFieldArrayRootError(control._formState.errors, error, name) }));
+		}
+		control._subjects.state.next({
+			name,
+			values: cloneObject(control._formValues)
+		});
+		control._names.focus && iterateFieldsByAction(control._fields, (ref, key) => {
+			if (control._names.focus && key.startsWith(control._names.focus) && ref.focus) {
+				ref.focus();
+				return 1;
+			}
+		});
+		control._names.focus = "";
+		control._setValid();
+		_actioned.current = false;
+	}, [
+		fields,
+		name,
+		control
+	]);
+	import_react.useEffect(() => {
+		!get(control._formValues, name) && control._setFieldArray(name);
+		return () => {
+			const updateMounted = (name$1, value) => {
+				const field = get(control._fields, name$1);
+				if (field && field._f) field._f.mount = value;
+			};
+			control._options.shouldUnregister || shouldUnregister ? control.unregister(name) : updateMounted(name, false);
+		};
+	}, [
+		name,
+		control,
+		keyName,
+		shouldUnregister
+	]);
+	return {
+		swap: import_react.useCallback(swap, [
+			updateValues,
+			name,
+			control
+		]),
+		move: import_react.useCallback(move, [
+			updateValues,
+			name,
+			control
+		]),
+		prepend: import_react.useCallback(prepend, [
+			updateValues,
+			name,
+			control
+		]),
+		append: import_react.useCallback(append, [
+			updateValues,
+			name,
+			control
+		]),
+		remove: import_react.useCallback(remove, [
+			updateValues,
+			name,
+			control
+		]),
+		insert: import_react.useCallback(insert$1, [
+			updateValues,
+			name,
+			control
+		]),
+		update: import_react.useCallback(update, [
+			updateValues,
+			name,
+			control
+		]),
+		replace: import_react.useCallback(replace, [
+			updateValues,
+			name,
+			control
+		]),
+		fields: import_react.useMemo(() => fields.map((field, index$1) => ({
+			...field,
+			[keyName]: ids.current[index$1] || generateId()
+		})), [fields, keyName])
 	};
 }
 function useForm(props = {}) {
@@ -31865,7 +32107,7 @@ var require_use_sync_external_store_shim_development = /* @__PURE__ */ __commonJ
 				var cachedValue = getSnapshot();
 				objectIs(value, cachedValue) || (console.error("The result of getSnapshot should be cached to avoid an infinite loop"), didWarnUncachedGetSnapshot = !0);
 			}
-			cachedValue = useState$6({ inst: {
+			cachedValue = useState$7({ inst: {
 				value,
 				getSnapshot
 			} });
@@ -31879,7 +32121,7 @@ var require_use_sync_external_store_shim_development = /* @__PURE__ */ __commonJ
 				value,
 				getSnapshot
 			]);
-			useEffect$2(function() {
+			useEffect$3(function() {
 				checkIfSnapshotChanged(inst) && forceUpdate({ inst });
 				return subscribe$1(function() {
 					checkIfSnapshotChanged(inst) && forceUpdate({ inst });
@@ -31902,7 +32144,7 @@ var require_use_sync_external_store_shim_development = /* @__PURE__ */ __commonJ
 			return getSnapshot();
 		}
 		"undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-		var React$30 = require_react(), objectIs = "function" === typeof Object.is ? Object.is : is, useState$6 = React$30.useState, useEffect$2 = React$30.useEffect, useLayoutEffect$2 = React$30.useLayoutEffect, useDebugValue = React$30.useDebugValue, didWarnOld18Alpha = !1, didWarnUncachedGetSnapshot = !1, shim = "undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement ? useSyncExternalStore$1 : useSyncExternalStore$2;
+		var React$30 = require_react(), objectIs = "function" === typeof Object.is ? Object.is : is, useState$7 = React$30.useState, useEffect$3 = React$30.useEffect, useLayoutEffect$2 = React$30.useLayoutEffect, useDebugValue = React$30.useDebugValue, didWarnOld18Alpha = !1, didWarnUncachedGetSnapshot = !1, shim = "undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement ? useSyncExternalStore$1 : useSyncExternalStore$2;
 		exports.useSyncExternalStore = void 0 !== React$30.useSyncExternalStore ? React$30.useSyncExternalStore : shim;
 		"undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
 	})();
@@ -38151,7 +38393,9 @@ var formSchema = object({
 	contact: string().min(5, "O contato é obrigatório."),
 	type: _enum(["Presencial", "Home Office"], { required_error: "Selecione o tipo da vaga." }),
 	cep: string().optional(),
-	distance: string().optional()
+	distance: string().optional(),
+	equipmentQuestion: string().min(5, "A pergunta obrigatória não pode ficar vazia."),
+	customQuestions: array(object({ question: string().min(3, "A pergunta deve ter pelo menos 3 caracteres.") })).default([])
 }).superRefine((data, ctx) => {
 	if (data.type === "Presencial") {
 		if (!data.cep || data.cep.length < 8) ctx.addIssue({
@@ -38166,7 +38410,7 @@ var formSchema = object({
 		});
 	}
 });
-function NovaVagaDialog() {
+function NovaVagaDialog({ onAddVacancy }) {
 	const [open, setOpen] = (0, import_react.useState)(false);
 	const [step, setStep] = (0, import_react.useState)(1);
 	const form = useForm({
@@ -38181,15 +38425,44 @@ function NovaVagaDialog() {
 			contact: "",
 			type: "Presencial",
 			cep: "",
-			distance: ""
+			distance: "",
+			equipmentQuestion: "Qual modelo de celular você possui?",
+			customQuestions: []
 		}
 	});
 	const watchType = form.watch("type");
+	const { fields, append, remove } = useFieldArray({
+		control: form.control,
+		name: "customQuestions"
+	});
+	(0, import_react.useEffect)(() => {
+		if (watchType === "Home Office") form.setValue("equipmentQuestion", "Qual modelo de notebook/computador você possui?");
+		else form.setValue("equipmentQuestion", "Qual modelo de celular você possui?");
+	}, [watchType, form]);
 	const onNext = async () => {
-		if (await form.trigger()) setStep(2);
+		if (await form.trigger([
+			"title",
+			"service",
+			"value",
+			"availability",
+			"requirements",
+			"serviceDate",
+			"contact",
+			"type",
+			"cep",
+			"distance"
+		])) setStep(2);
 	};
 	const onSubmit = (data) => {
-		console.log("Submitting data:", data);
+		if (onAddVacancy) onAddVacancy({
+			id: Math.random().toString(36).substr(2, 9),
+			title: data.title,
+			service: data.service,
+			value: Number(data.value),
+			type: data.type,
+			serviceDate: data.serviceDate.toISOString().split("T")[0],
+			status: "Ativo"
+		});
 		setOpen(false);
 		setStep(1);
 		form.reset();
@@ -38220,7 +38493,7 @@ function NovaVagaDialog() {
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Briefcase, { className: "w-5 h-5 text-primary" }), "Criar Nova Vaga"]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogDescription, {
 						className: "mt-1 text-muted-foreground",
-						children: step === 1 ? "Preencha os dados essenciais da vaga." : "Revise e publique a vaga."
+						children: step === 1 ? "Preencha os dados essenciais da vaga." : "Defina as perguntas para os candidatos."
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "flex items-center gap-2 text-sm font-medium text-muted-foreground",
@@ -38469,65 +38742,98 @@ function NovaVagaDialog() {
 								]
 							}),
 							step === 2 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								className: "py-12 flex flex-col items-center justify-center text-center animate-in fade-in slide-in-from-right-4 duration-300",
+								className: "space-y-6 animate-in fade-in slide-in-from-right-4 duration-300",
 								children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-										className: "w-16 h-16 bg-success/15 text-success rounded-full flex items-center justify-center mb-5 shadow-sm",
-										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Building2, { className: "w-8 h-8" })
-									}),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-										className: "text-xl font-bold text-secondary mb-2",
-										children: "Etapa 2: Configurações Adicionais"
-									}),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										className: "text-muted-foreground max-w-sm mb-8",
-										children: "Aqui você poderia configurar testes técnicos, formulários personalizados e permissões de acesso."
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "mb-4",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+											className: "text-lg font-bold text-secondary flex items-center gap-2 mb-1",
+											children: "Perguntas para o Candidato"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											className: "text-sm text-muted-foreground",
+											children: "Defina as perguntas que os candidatos deverão responder ao se candidatarem para esta vaga."
+										})]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										className: "p-5 bg-muted/30 rounded-lg text-sm text-left w-full max-w-md border border-border shadow-sm",
-										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-											className: "font-semibold mb-3 text-secondary border-b border-border pb-2",
-											children: "Resumo da Vaga:"
-										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
-											className: "space-y-2 text-muted-foreground",
-											children: [
-												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-													className: "flex justify-between",
-													children: [
-														/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-															className: "font-medium text-secondary",
-															children: "Título:"
-														}),
-														" ",
-														/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: form.getValues("title") })
-													]
+										className: "p-5 bg-muted/20 rounded-lg border border-border space-y-4",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
+											className: "font-semibold text-secondary text-sm uppercase tracking-wider",
+											children: "Pergunta Automática"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormField, {
+											control: form.control,
+											name: "equipmentQuestion",
+											render: ({ field }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, { children: [
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormLabel, {
+													className: "text-secondary flex items-center gap-1",
+													children: ["Equipamento Necessário", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+														className: "text-destructive",
+														children: "*"
+													})]
 												}),
-												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-													className: "flex justify-between",
-													children: [
-														/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-															className: "font-medium text-secondary",
-															children: "Tipo:"
-														}),
-														" ",
-														/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: form.getValues("type") })
-													]
-												}),
-												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-													className: "flex justify-between",
-													children: [
-														/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-															className: "font-medium text-secondary",
-															children: "Valor:"
-														}),
-														" ",
-														/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-															className: "text-success font-medium",
-															children: ["R$ ", form.getValues("value")]
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+													className: "focus-visible:ring-accent bg-background",
+													...field
+												}) }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormMessage, {})
+											] })
+										})]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "space-y-4",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "flex items-center justify-between border-b border-border pb-2",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
+												className: "font-semibold text-secondary text-sm uppercase tracking-wider",
+												children: "Perguntas Personalizadas"
+											}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+												type: "button",
+												variant: "outline",
+												size: "sm",
+												onClick: () => append({ question: "" }),
+												className: "text-primary border-primary/20 hover:bg-primary/10 h-8 text-xs",
+												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Plus, { className: "w-3.5 h-3.5 mr-1" }), "Adicionar Pergunta"]
+											})]
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "space-y-3",
+											children: [fields.map((item, index$1) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+												className: "flex gap-3 items-start animate-in fade-in slide-in-from-left-2 duration-200",
+												children: [
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+														className: "mt-2.5 w-6 h-6 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-muted-foreground shrink-0",
+														children: index$1 + 1
+													}),
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormField, {
+														control: form.control,
+														name: `customQuestions.${index$1}.question`,
+														render: ({ field }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
+															className: "flex-1",
+															children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+																placeholder: "Digite a pergunta para o candidato...",
+																className: "focus-visible:ring-accent",
+																...field
+															}) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormMessage, {})]
 														})
-													]
-												})
-											]
+													}),
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+														type: "button",
+														variant: "ghost",
+														size: "icon",
+														onClick: () => remove(index$1),
+														className: "text-muted-foreground hover:text-destructive hover:bg-destructive/10 mt-0.5",
+														title: "Remover pergunta",
+														children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Trash2, { className: "w-4 h-4" })
+													})
+												]
+											}, item.id)), fields.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+												className: "py-8 text-center bg-muted/10 rounded-lg border border-dashed border-border/60",
+												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+													className: "text-sm text-muted-foreground",
+													children: "Nenhuma pergunta personalizada adicionada."
+												}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+													className: "text-xs text-muted-foreground mt-1",
+													children: "Clique em \"Adicionar Pergunta\" para incluir requisitos específicos."
+												})]
+											})]
 										})]
 									})
 								]
@@ -38554,7 +38860,7 @@ function NovaVagaDialog() {
 								}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
 									type: "submit",
 									className: "bg-success hover:bg-success/90 text-white min-w-[120px] shadow-sm tap-effect",
-									children: "Publicar Vaga"
+									children: "Salvar Vaga"
 								})]
 							})
 						]
@@ -38565,6 +38871,10 @@ function NovaVagaDialog() {
 	});
 }
 function Vagas() {
+	const [vacancies, setVacancies] = (0, import_react.useState)(mockVacancies);
+	const handleAddVacancy = (newVacancy) => {
+		setVacancies((prev) => [newVacancy, ...prev]);
+	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "container mx-auto px-4 py-8 max-w-7xl pb-24",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -38575,10 +38885,10 @@ function Vagas() {
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 				className: "text-muted-foreground mt-1.5",
 				children: "Gerencie todas as vagas de serviço e acompanhe o status de cada oportunidade."
-			})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NovaVagaDialog, {})]
+			})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NovaVagaDialog, { onAddVacancy: handleAddVacancy })]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6",
-			children: mockVacancies.map((vacancy, index$1) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			children: vacancies.map((vacancy, index$1) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				className: "animate-in fade-in slide-in-from-bottom-4",
 				style: {
 					animationDelay: `${index$1 * 100}ms`,
@@ -38737,4 +39047,4 @@ var App = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BrowserRouter, {
 var App_default = App;
 (0, import_client.createRoot)(document.getElementById("root")).render(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(App_default, {}));
 
-//# sourceMappingURL=index-Cv0Mm5kh.js.map
+//# sourceMappingURL=index-Dvro0dn7.js.map
