@@ -1,65 +1,51 @@
-export type VacancyStatus = 'Aberta' | 'Pausada' | 'Encerrada'
+export type VacancyStatus = 'Ativo' | 'Inativo'
+export type VacancyType = 'Presencial' | 'Home Office'
 
 export interface Vacancy {
   id: string
   title: string
-  department: string
-  location: string
-  type: string
-  datePosted: string
+  service: string
+  value: number
+  type: VacancyType
+  serviceDate: string
   status: VacancyStatus
-  candidatesCount: number
 }
 
 export const mockVacancies: Vacancy[] = [
   {
     id: '1',
-    title: 'Desenvolvedor Frontend Sênior',
-    department: 'Engenharia',
-    location: 'Remoto',
-    type: 'CLT',
-    datePosted: '2023-10-24',
-    status: 'Aberta',
-    candidatesCount: 12,
+    title: 'Consultoria de Infraestrutura',
+    service: 'Arquitetura Cloud',
+    value: 12500,
+    type: 'Home Office',
+    serviceDate: '2024-03-15',
+    status: 'Ativo',
   },
   {
     id: '2',
-    title: 'Product Manager',
-    department: 'Produto',
-    location: 'São Paulo, SP',
-    type: 'CLT',
-    datePosted: '2023-10-22',
-    status: 'Aberta',
-    candidatesCount: 8,
+    title: 'Desenvolvimento de MVP',
+    service: 'Engenharia de Software',
+    value: 25000,
+    type: 'Home Office',
+    serviceDate: '2024-04-01',
+    status: 'Ativo',
   },
   {
     id: '3',
-    title: 'Analista de Dados Pleno',
-    department: 'Dados',
-    location: 'Remoto',
-    type: 'PJ',
-    datePosted: '2023-10-15',
-    status: 'Pausada',
-    candidatesCount: 45,
+    title: 'Design de Interface App',
+    service: 'UX/UI Design',
+    value: 8000,
+    type: 'Presencial',
+    serviceDate: '2024-03-20',
+    status: 'Inativo',
   },
   {
     id: '4',
-    title: 'Designer UX/UI',
-    department: 'Design',
-    location: 'Rio de Janeiro, RJ',
-    type: 'CLT',
-    datePosted: '2023-10-01',
-    status: 'Encerrada',
-    candidatesCount: 112,
-  },
-  {
-    id: '5',
-    title: 'Desenvolvedor Backend Pleno',
-    department: 'Engenharia',
-    location: 'Remoto',
-    type: 'CLT',
-    datePosted: '2023-10-25',
-    status: 'Aberta',
-    candidatesCount: 3,
+    title: 'Otimização de Banco de Dados',
+    service: 'Database Admin',
+    value: 15000,
+    type: 'Presencial',
+    serviceDate: '2024-04-10',
+    status: 'Ativo',
   },
 ]

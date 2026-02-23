@@ -1,29 +1,6 @@
 import { Outlet, Navigate, useLocation, Link } from 'react-router-dom'
-import {
-  Briefcase,
-  Users,
-  FileText,
-  PlusCircle,
-  LogOut,
-  LayoutDashboard,
-  Menu,
-} from 'lucide-react'
+import { Briefcase, LogOut, Menu } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarHeader,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger,
-  useSidebar,
-} from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -34,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 
 export default function Layout() {
@@ -53,16 +31,87 @@ export default function Layout() {
   }
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset className="bg-background">
-        <header className="flex h-16 shrink-0 items-center justify-between border-b border-primary/10 bg-background/80 px-4 backdrop-blur-md sticky top-0 z-20">
-          <div className="flex items-center gap-4">
-            <SidebarTrigger className="text-primary hover:bg-primary/10 hover:text-primary" />
-            <div className="flex items-center gap-2 font-semibold text-primary md:hidden">
-              <Briefcase className="h-5 w-5 text-accent" />
-              <span>Gestão de Vagas</span>
-            </div>
+    <div className="min-h-screen bg-background flex flex-col">
+      <header className="sticky top-0 z-50 w-full border-b border-primary/10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
+        <div className="container mx-auto px-4 flex h-16 items-center justify-between">
+          <div className="flex items-center gap-6 md:gap-10">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden text-primary"
+                >
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[280px] sm:w-[320px]">
+                <div className="flex items-center gap-2 mb-8 mt-4">
+                  <Briefcase className="h-6 w-6 text-primary" />
+                  <span className="text-xl font-bold text-secondary">
+                    Gestão de Vagas
+                  </span>
+                </div>
+                <nav className="flex flex-col gap-4">
+                  <Link
+                    to="/vagas"
+                    className={cn(
+                      'text-lg font-medium transition-colors hover:text-primary',
+                      location.pathname === '/vagas'
+                        ? 'text-primary'
+                        : 'text-muted-foreground',
+                    )}
+                  >
+                    Vagas
+                  </Link>
+                  <Link
+                    to="/banco-talentos"
+                    className={cn(
+                      'text-lg font-medium transition-colors hover:text-primary',
+                      location.pathname === '/banco-talentos'
+                        ? 'text-primary'
+                        : 'text-muted-foreground',
+                    )}
+                  >
+                    Banco de Talentos
+                  </Link>
+                </nav>
+              </SheetContent>
+            </Sheet>
+
+            <Link to="/vagas" className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+                <Briefcase className="h-5 w-5" />
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent hidden sm:inline-block">
+                Gestão de Vagas
+              </span>
+            </Link>
+
+            <nav className="hidden md:flex items-center space-x-8 text-sm font-medium">
+              <Link
+                to="/vagas"
+                className={cn(
+                  'transition-colors hover:text-primary',
+                  location.pathname === '/vagas'
+                    ? 'text-primary'
+                    : 'text-muted-foreground',
+                )}
+              >
+                Vagas
+              </Link>
+              <Link
+                to="/banco-talentos"
+                className={cn(
+                  'transition-colors hover:text-primary',
+                  location.pathname === '/banco-talentos'
+                    ? 'text-primary'
+                    : 'text-muted-foreground',
+                )}
+              >
+                Banco de Talentos
+              </Link>
+            </nav>
           </div>
 
           <div className="flex items-center gap-4">
@@ -75,10 +124,10 @@ export default function Layout() {
                   <Avatar className="h-10 w-10 border border-primary/20">
                     <AvatarImage
                       src="https://img.usecurling.com/ppl/thumbnail?gender=female&seed=1"
-                      alt="Recrutador"
+                      alt="Usuário"
                     />
                     <AvatarFallback className="bg-primary/10 text-primary">
-                      RC
+                      US
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -86,7 +135,7 @@ export default function Layout() {
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
+                    <p className="text-sm font-medium leading-none text-secondary">
                       Roberta Costa
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
@@ -105,84 +154,12 @@ export default function Layout() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-        </header>
-        <main className="flex-1 p-4 md:p-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <Outlet />
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
-  )
-}
+        </div>
+      </header>
 
-function AppSidebar() {
-  const location = useLocation()
-
-  const navItems = [
-    { title: 'Vagas', url: '/vagas', icon: LayoutDashboard },
-    { title: 'Candidatos', url: '#', icon: Users },
-    { title: 'Relatórios', url: '#', icon: FileText },
-  ]
-
-  return (
-    <Sidebar className="border-r border-primary/10">
-      <SidebarHeader className="flex h-16 items-center px-4">
-        <Link
-          to="/vagas"
-          className="flex items-center gap-2 font-bold text-xl text-secondary"
-        >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-            <Briefcase className="h-5 w-5" />
-          </div>
-          <span className="bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent">
-            Gestão de Vagas
-          </span>
-        </Link>
-      </SidebarHeader>
-      <SidebarContent className="px-2 pt-4">
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navItems.map((item) => {
-                const isActive =
-                  location.pathname.startsWith(item.url) && item.url !== '#'
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={isActive}
-                      className={cn(
-                        'h-10 transition-all duration-200',
-                        isActive
-                          ? 'bg-primary/10 text-primary font-medium'
-                          : 'text-muted-foreground hover:bg-muted hover:text-primary',
-                      )}
-                    >
-                      <Link to={item.url}>
-                        <item.icon
-                          className={cn(
-                            'h-5 w-5',
-                            isActive ? 'text-accent' : '',
-                          )}
-                        />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarFooter className="p-4">
-        <Button
-          className="w-full bg-gradient-primary text-white shadow-md hover:shadow-lg tap-effect border-none"
-          size="lg"
-        >
-          <PlusCircle className="mr-2 h-5 w-5" />
-          Nova Vaga
-        </Button>
-      </SidebarFooter>
-    </Sidebar>
+      <main className="flex-1 w-full bg-background animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <Outlet />
+      </main>
+    </div>
   )
 }
