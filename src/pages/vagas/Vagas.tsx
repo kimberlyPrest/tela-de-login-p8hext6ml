@@ -3,7 +3,6 @@ import {
   DollarSign,
   MapPin,
   Monitor,
-  Plus,
   ArrowRight,
   MoreVertical,
   Briefcase,
@@ -20,6 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { mockVacancies, Vacancy } from '@/lib/mock-data'
 import { cn } from '@/lib/utils'
+import { NovaVagaDialog } from '@/components/vagas/NovaVagaDialog'
 
 export default function Vagas() {
   return (
@@ -35,10 +35,7 @@ export default function Vagas() {
             oportunidade.
           </p>
         </div>
-        <Button className="w-full sm:w-auto bg-success hover:bg-success/90 text-white shadow-md text-base px-6 py-6 rounded-lg tap-effect border-none">
-          <Plus className="mr-2 h-5 w-5" />
-          Nova Vaga
-        </Button>
+        <NovaVagaDialog />
       </div>
 
       {/* Vacancy Dashboard */}
