@@ -41,6 +41,7 @@ import {
 import { Calendar } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
 import { Vacancy } from '@/lib/mock-data'
+import { useVacancies } from '@/contexts/VacanciesContext'
 
 const formSchema = z
   .object({
@@ -94,28 +95,39 @@ const formSchema = z
 type FormValues = z.infer<typeof formSchema>
 
 interface NovaVagaDialogProps {
-  onAddVacancy?: (vacancy: Vacancy) => void
+  vacancy?: Vacancy
+  customTrigger?: React.ReactNode
 }
 
-export function NovaVagaDialog({ onAddVacancy }: NovaVagaDialogProps) {
+export function NovaVagaDialog({
+  vacancy,
+  customTrigger,
+}: NovaVagaDialogProps) {
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState(1)
+  const { addVacancy, updateVacancy } = useVacancies()
+
+  const isEditMode = !!vacancy
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
-      service: '',
-      value: '',
-      availability: '',
-      requirements: '',
-      training: false,
-      contact: '',
-      type: 'Presencial',
-      cep: '',
-      distance: '',
-      equipmentQuestion: 'Qual modelo de celular você possui?',
-      customQuestions: [],
+      title: vacancy?.title || '',
+      service: vacancy?.service || '',
+      value: vacancy ? String(vacancy.value) : '',
+      availability: vacancy?.availability || '',
+      requirements: vacancy?.requirements || '',
+      serviceDate: vacancy
+        ? new Date(vacancy.serviceDate + 'T12:00:00')
+        : undefined,
+      training: vacancy?.training || false,
+      contact: vacancy?.contact || '',
+      type: vacancy?.type || 'Presencial',
+      cep: vacancy?.cep || '',
+      distance: vacancy?.distance || '',
+      equipmentQuestion:
+        vacancy?.equipmentQuestion || 'Qual modelo de celular você possui?',
+      customQuestions: vacancy?.customQuestions || [],
     },
   })
 
@@ -127,15 +139,21 @@ export function NovaVagaDialog({ onAddVacancy }: NovaVagaDialogProps) {
   })
 
   useEffect(() => {
-    if (watchType === 'Home Office') {
-      form.setValue(
-        'equipmentQuestion',
-        'Qual modelo de notebook/computador você possui?',
-      )
-    } else {
-      form.setValue('equipmentQuestion', 'Qual modelo de celular você possui?')
+    // Only auto-update if not in edit mode, or if the user actively changes the type
+    if (!isEditMode || watchType !== vacancy?.type) {
+      if (watchType === 'Home Office') {
+        form.setValue(
+          'equipmentQuestion',
+          'Qual modelo de notebook/computador você possui?',
+        )
+      } else {
+        form.setValue(
+          'equipmentQuestion',
+          'Qual modelo de celular você possui?',
+        )
+      }
     }
-  }, [watchType, form])
+  }, [watchType, form, isEditMode, vacancy])
 
   const onNext = async () => {
     const isValid = await form.trigger([
@@ -156,20 +174,37 @@ export function NovaVagaDialog({ onAddVacancy }: NovaVagaDialogProps) {
   }
 
   const onSubmit = (data: FormValues) => {
-    if (onAddVacancy) {
-      onAddVacancy({
+    const vacancyData = {
+      title: data.title,
+      service: data.service,
+      value: Number(data.value),
+      type: data.type as any,
+      serviceDate: data.serviceDate.toISOString().split('T')[0],
+      availability: data.availability,
+      requirements: data.requirements,
+      training: data.training,
+      contact: data.contact,
+      cep: data.cep,
+      distance: data.distance,
+      equipmentQuestion: data.equipmentQuestion,
+      customQuestions: data.customQuestions,
+    }
+
+    if (isEditMode && vacancy) {
+      updateVacancy(vacancy.id, vacancyData)
+    } else {
+      addVacancy({
         id: Math.random().toString(36).substr(2, 9),
-        title: data.title,
-        service: data.service,
-        value: Number(data.value),
-        type: data.type as any,
-        serviceDate: data.serviceDate.toISOString().split('T')[0],
         status: 'Ativo',
+        ...vacancyData,
       })
     }
+
     setOpen(false)
     setStep(1)
-    form.reset()
+    if (!isEditMode) {
+      form.reset()
+    }
   }
 
   return (
@@ -179,22 +214,26 @@ export function NovaVagaDialog({ onAddVacancy }: NovaVagaDialogProps) {
         setOpen(val)
         if (!val) {
           setStep(1)
-          form.reset()
+          if (!isEditMode) form.reset()
         }
       }}
     >
       <DialogTrigger asChild>
-        <Button className="w-full sm:w-auto bg-success hover:bg-success/90 text-white shadow-md text-base px-6 py-6 rounded-lg tap-effect border-none">
-          <Plus className="mr-2 h-5 w-5" />
-          Nova Vaga
-        </Button>
+        {customTrigger ? (
+          customTrigger
+        ) : (
+          <Button className="w-full sm:w-auto bg-success hover:bg-success/90 text-white shadow-md text-base px-6 py-6 rounded-lg tap-effect border-none">
+            <Plus className="mr-2 h-5 w-5" />
+            Nova Vaga
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden bg-background border-border shadow-elevation">
         <div className="px-6 py-4 border-b border-border bg-muted/30 flex items-center justify-between">
           <DialogHeader className="text-left space-y-0">
             <DialogTitle className="text-xl font-bold text-secondary flex items-center gap-2">
               <Briefcase className="w-5 h-5 text-primary" />
-              Criar Nova Vaga
+              {isEditMode ? 'Editar Vaga' : 'Criar Nova Vaga'}
             </DialogTitle>
             <DialogDescription className="mt-1 text-muted-foreground">
               {step === 1
@@ -349,7 +388,6 @@ export function NovaVagaDialog({ onAddVacancy }: NovaVagaDialogProps) {
                                 selected={field.value}
                                 onSelect={field.onChange}
                                 disabled={(date) =>
-                                  date < new Date() ||
                                   date < new Date('1900-01-01')
                                 }
                                 initialFocus
@@ -648,7 +686,7 @@ export function NovaVagaDialog({ onAddVacancy }: NovaVagaDialogProps) {
                     type="submit"
                     className="bg-success hover:bg-success/90 text-white min-w-[120px] shadow-sm tap-effect"
                   >
-                    Salvar Vaga
+                    {isEditMode ? 'Salvar Vaga' : 'Criar Vaga'}
                   </Button>
                 )}
               </div>

@@ -15994,6 +15994,11 @@ function useOutlet(context) {
 	let outlet = import_react.useContext(RouteContext).outlet;
 	return import_react.useMemo(() => outlet && /* @__PURE__ */ import_react.createElement(OutletContext.Provider, { value: context }, outlet), [outlet, context]);
 }
+function useParams() {
+	let { matches } = import_react.useContext(RouteContext);
+	let routeMatch = matches[matches.length - 1];
+	return routeMatch ? routeMatch.params : {};
+}
 function useResolvedPath(to, { relative } = {}) {
 	let { matches } = import_react.useContext(RouteContext);
 	let { pathname: locationPathname } = useLocation();
@@ -17827,7 +17832,7 @@ function createCollection(name) {
 		createCollectionScope$4
 	];
 }
-var Primitive = [
+var Primitive$1 = [
 	"a",
 	"button",
 	"div",
@@ -17961,7 +17966,7 @@ var DismissableLayer = import_react.forwardRef((props, forwardedRef) => {
 		document.addEventListener(CONTEXT_UPDATE, handleUpdate);
 		return () => document.removeEventListener(CONTEXT_UPDATE, handleUpdate);
 	}, []);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		...layerProps,
 		ref: composedRefs,
 		style: {
@@ -17988,7 +17993,7 @@ var DismissableLayerBranch = import_react.forwardRef((props, forwardedRef) => {
 			};
 		}
 	}, [context.branches]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		...props,
 		ref: composedRefs
 	});
@@ -18054,7 +18059,7 @@ function handleAndDispatchCustomEvent$1(name, handler, detail, { discrete }) {
 	if (discrete) dispatchDiscreteCustomEvent(target, event);
 	else target.dispatchEvent(event);
 }
-var Root$8 = DismissableLayer;
+var Root$9 = DismissableLayer;
 var Branch = DismissableLayerBranch;
 var useLayoutEffect2 = globalThis?.document ? import_react.useLayoutEffect : () => {};
 var import_react_dom$5 = /* @__PURE__ */ __toESM(require_react_dom(), 1);
@@ -18064,7 +18069,7 @@ var Portal = import_react.forwardRef((props, forwardedRef) => {
 	const [mounted, setMounted] = import_react.useState(false);
 	useLayoutEffect2(() => setMounted(true), []);
 	const container = containerProp || mounted && globalThis?.document?.body;
-	return container ? import_react_dom$5.createPortal(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return container ? import_react_dom$5.createPortal(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		...portalProps,
 		ref: forwardedRef
 	}), container) : null;
@@ -18233,9 +18238,9 @@ var VISUALLY_HIDDEN_STYLES = Object.freeze({
 	whiteSpace: "nowrap",
 	wordWrap: "normal"
 });
-var NAME$2 = "VisuallyHidden";
+var NAME$3 = "VisuallyHidden";
 var VisuallyHidden = import_react.forwardRef((props, forwardedRef) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
 		...props,
 		ref: forwardedRef,
 		style: {
@@ -18244,8 +18249,8 @@ var VisuallyHidden = import_react.forwardRef((props, forwardedRef) => {
 		}
 	});
 });
-VisuallyHidden.displayName = NAME$2;
-var Root$7 = VisuallyHidden;
+VisuallyHidden.displayName = NAME$3;
+var Root$8 = VisuallyHidden;
 var import_react_dom$4 = /* @__PURE__ */ __toESM(require_react_dom(), 1);
 var PROVIDER_NAME$1 = "ToastProvider";
 var [Collection$3, useCollection$3, createCollectionScope$3] = createCollection("Toast");
@@ -18385,7 +18390,7 @@ var ToastViewport$1 = import_react.forwardRef((props, forwardedRef) => {
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$3.Slot, {
 				scope: __scopeToast,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.ol, {
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.ol, {
 					tabIndex: -1,
 					...viewportProps,
 					ref: composedRefs
@@ -18544,13 +18549,13 @@ var ToastImpl = import_react.forwardRef((props, forwardedRef) => {
 		onClose: handleClose,
 		children: import_react_dom$4.createPortal(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$3.ItemSlot, {
 			scope: __scopeToast,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$8, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$9, {
 				asChild: true,
 				onEscapeKeyDown: composeEventHandlers(onEscapeKeyDown, () => {
 					if (!context.isFocusedToastEscapeKeyDownRef.current) handleClose();
 					context.isFocusedToastEscapeKeyDownRef.current = false;
 				}),
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.li, {
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.li, {
 					tabIndex: 0,
 					"data-state": open ? "open" : "closed",
 					"data-swipe-direction": context.swipeDirection,
@@ -18650,7 +18655,7 @@ var ToastAnnounce = (props) => {
 var TITLE_NAME$1 = "ToastTitle";
 var ToastTitle$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeToast, ...titleProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		...titleProps,
 		ref: forwardedRef
 	});
@@ -18659,7 +18664,7 @@ ToastTitle$1.displayName = TITLE_NAME$1;
 var DESCRIPTION_NAME$1 = "ToastDescription";
 var ToastDescription$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeToast, ...descriptionProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		...descriptionProps,
 		ref: forwardedRef
 	});
@@ -18688,7 +18693,7 @@ var ToastClose$1 = import_react.forwardRef((props, forwardedRef) => {
 	const interactiveContext = useToastInteractiveContext(CLOSE_NAME$2, __scopeToast);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastAnnounceExclude, {
 		asChild: true,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
 			type: "button",
 			...closeProps,
 			ref: forwardedRef,
@@ -18699,7 +18704,7 @@ var ToastClose$1 = import_react.forwardRef((props, forwardedRef) => {
 ToastClose$1.displayName = CLOSE_NAME$2;
 var ToastAnnounceExclude = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeToast, altText, ...announceExcludeProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		"data-radix-toast-announce-exclude": "",
 		"data-radix-toast-announce-alt": altText || void 0,
 		...announceExcludeProps,
@@ -18922,6 +18927,13 @@ var createLucideIcon = (iconName, iconNode) => {
 	Component.displayName = toPascalCase(iconName);
 	return Component;
 };
+var ArrowLeft = createLucideIcon("arrow-left", [["path", {
+	d: "m12 19-7-7 7-7",
+	key: "1l729n"
+}], ["path", {
+	d: "M19 12H5",
+	key: "x3x0zl"
+}]]);
 var ArrowRight = createLucideIcon("arrow-right", [["path", {
 	d: "M5 12h14",
 	key: "1ays0h"
@@ -18982,11 +18994,29 @@ var ChevronUp = createLucideIcon("chevron-up", [["path", {
 	d: "m18 15-6-6-6 6",
 	key: "153udz"
 }]]);
+var CircleCheck = createLucideIcon("circle-check", [["circle", {
+	cx: "12",
+	cy: "12",
+	r: "10",
+	key: "1mglay"
+}], ["path", {
+	d: "m9 12 2 2 4-4",
+	key: "dzmm74"
+}]]);
 var Circle = createLucideIcon("circle", [["circle", {
 	cx: "12",
 	cy: "12",
 	r: "10",
 	key: "1mglay"
+}]]);
+var Clock = createLucideIcon("clock", [["circle", {
+	cx: "12",
+	cy: "12",
+	r: "10",
+	key: "1mglay"
+}], ["path", {
+	d: "M12 6v6l4 2",
+	key: "mmk7yg"
 }]]);
 var DollarSign = createLucideIcon("dollar-sign", [["line", {
 	x1: "12",
@@ -19139,6 +19169,22 @@ var Plus = createLucideIcon("plus", [["path", {
 }], ["path", {
 	d: "M12 5v14",
 	key: "s699le"
+}]]);
+var Search = createLucideIcon("search", [["path", {
+	d: "m21 21-4.34-4.34",
+	key: "14j7rj"
+}], ["circle", {
+	cx: "11",
+	cy: "11",
+	r: "8",
+	key: "4ej97u"
+}]]);
+var SquarePen = createLucideIcon("square-pen", [["path", {
+	d: "M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7",
+	key: "1m0v6g"
+}], ["path", {
+	d: "M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z",
+	key: "ohrbg2"
 }]]);
 var Trash2 = createLucideIcon("trash-2", [
 	["path", {
@@ -20958,10 +21004,10 @@ var Observer = class {
 			if (typeof id !== "string" && typeof id !== "number") return { unwrap };
 			else return Object.assign(id, { unwrap });
 		};
-		this.custom = (jsx$25, data) => {
+		this.custom = (jsx$26, data) => {
 			const id = (data == null ? void 0 : data.id) || toastsCounter++;
 			this.create({
-				jsx: jsx$25(id),
+				jsx: jsx$26(id),
 				id,
 				...data
 			});
@@ -23087,10 +23133,10 @@ var arrow = (options$1, deps) => ({
 	...arrow$1$1(options$1),
 	options: [options$1, deps]
 });
-var NAME$1 = "Arrow";
+var NAME$2 = "Arrow";
 var Arrow$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { children, width = 10, height = 5, ...arrowProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.svg, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.svg, {
 		...arrowProps,
 		ref: forwardedRef,
 		width,
@@ -23100,8 +23146,8 @@ var Arrow$1 = import_react.forwardRef((props, forwardedRef) => {
 		children: props.asChild ? children : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("polygon", { points: "0,0 30,0 15,10" })
 	});
 });
-Arrow$1.displayName = NAME$1;
-var Root$6 = Arrow$1;
+Arrow$1.displayName = NAME$2;
+var Root$7 = Arrow$1;
 function useSize(element) {
 	const [size$3, setSize] = import_react.useState(void 0);
 	useLayoutEffect2(() => {
@@ -23162,7 +23208,7 @@ var PopperAnchor = import_react.forwardRef((props, forwardedRef) => {
 		anchorRef.current = virtualRef?.current || ref.current;
 		if (previousAnchor !== anchorRef.current) context.onAnchorChange(anchorRef.current);
 	});
-	return virtualRef ? null : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return virtualRef ? null : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		...anchorProps,
 		ref: composedRefs
 	});
@@ -23272,7 +23318,7 @@ var PopperContent = import_react.forwardRef((props, forwardedRef) => {
 			arrowX,
 			arrowY,
 			shouldHideArrow: cannotCenterArrow,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 				"data-side": placedSide,
 				"data-align": placedAlign,
 				...contentProps,
@@ -23318,7 +23364,7 @@ var PopperArrow = import_react.forwardRef(function PopperArrow2(props, forwarded
 			}[contentContext.placedSide],
 			visibility: contentContext.shouldHideArrow ? "hidden" : void 0
 		},
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$6, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$7, {
 			...arrowProps,
 			ref: forwardedRef,
 			style: {
@@ -23515,7 +23561,7 @@ var TooltipTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Anchor, {
 		asChild: true,
 		...popperScope,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
 			"aria-describedby": context.open ? context.contentId : void 0,
 			"data-state": context.stateAttribute,
 			...triggerProps,
@@ -23700,7 +23746,7 @@ var TooltipContentImpl = import_react.forwardRef((props, forwardedRef) => {
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Slottable, { children }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VisuallyHiddenContentContextProvider, {
 				scope: __scopeTooltip,
 				isInside: true,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$7, {
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$8, {
 					id: context.contentId,
 					role: "tooltip",
 					children: ariaLabel || children
@@ -29477,7 +29523,7 @@ var Button = import_react.forwardRef(({ className, variant, size: size$3, asChil
 });
 Button.displayName = "Button";
 require_react_dom();
-var Primitive$1 = [
+var Primitive = [
 	"a",
 	"button",
 	"div",
@@ -29512,9 +29558,9 @@ var Primitive$1 = [
 		[node]: Node$1
 	};
 }, {});
-var NAME = "Label";
+var NAME$1 = "Label";
 var Label$3 = import_react.forwardRef((props, forwardedRef) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.label, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.label, {
 		...props,
 		ref: forwardedRef,
 		onMouseDown: (event) => {
@@ -29524,15 +29570,15 @@ var Label$3 = import_react.forwardRef((props, forwardedRef) => {
 		}
 	});
 });
-Label$3.displayName = NAME;
-var Root$5 = Label$3;
+Label$3.displayName = NAME$1;
+var Root$6 = Label$3;
 var labelVariants = cva("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70");
-var Label$2 = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$5, {
+var Label$2 = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$6, {
 	ref,
 	className: cn(labelVariants(), className),
 	...props
 }));
-Label$2.displayName = Root$5.displayName;
+Label$2.displayName = Root$6.displayName;
 var Form = FormProvider;
 var FormFieldContext = import_react.createContext({});
 var FormField = ({ ...props }) => {
@@ -29991,7 +30037,7 @@ var FocusScope = import_react.forwardRef((props, forwardedRef) => {
 		trapped,
 		focusScope.paused
 	]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		tabIndex: -1,
 		...scopeProps,
 		ref: composedRefs,
@@ -30122,7 +30168,7 @@ var RovingFocusGroupImpl = import_react.forwardRef((props, forwardedRef) => {
 		onItemShiftTab: import_react.useCallback(() => setIsTabbingBackOut(true), []),
 		onFocusableItemAdd: import_react.useCallback(() => setFocusableItemsCount((prevCount) => prevCount + 1), []),
 		onFocusableItemRemove: import_react.useCallback(() => setFocusableItemsCount((prevCount) => prevCount - 1), []),
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 			tabIndex: isTabbingBackOut || focusableItemsCount === 0 ? -1 : 0,
 			"data-orientation": orientation,
 			...groupProps,
@@ -30178,7 +30224,7 @@ var RovingFocusGroupItem = import_react.forwardRef((props, forwardedRef) => {
 		id,
 		focusable,
 		active,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
 			tabIndex: isCurrentTabStop ? 0 : -1,
 			"data-orientation": context.orientation,
 			...itemProps,
@@ -30247,7 +30293,7 @@ function focusFirst$1(candidates, preventScroll = false) {
 function wrapArray$2(array$1, startIndex) {
 	return array$1.map((_$1, index$1) => array$1[(startIndex + index$1) % array$1.length]);
 }
-var Root$4 = RovingFocusGroup;
+var Root$5 = RovingFocusGroup;
 var Item$1 = RovingFocusGroupItem;
 var getDefaultParent = function(originalTarget) {
 	if (typeof document === "undefined") return null;
@@ -31181,7 +31227,7 @@ var MenuContentImpl = import_react.forwardRef((props, forwardedRef) => {
 					onFocusOutside,
 					onInteractOutside,
 					onDismiss,
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$4, {
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$5, {
 						asChild: true,
 						...rovingFocusGroupScope,
 						dir: rootContext.dir,
@@ -31247,7 +31293,7 @@ MenuContent.displayName = CONTENT_NAME$4;
 var GROUP_NAME$2 = "MenuGroup";
 var MenuGroup = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeMenu, ...groupProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		role: "group",
 		...groupProps,
 		ref: forwardedRef
@@ -31257,7 +31303,7 @@ MenuGroup.displayName = GROUP_NAME$2;
 var LABEL_NAME$2 = "MenuLabel";
 var MenuLabel = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeMenu, ...labelProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		...labelProps,
 		ref: forwardedRef
 	});
@@ -31328,7 +31374,7 @@ var MenuItemImpl = import_react.forwardRef((props, forwardedRef) => {
 			asChild: true,
 			...rovingFocusGroupScope,
 			focusable: !disabled,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 				role: "menuitem",
 				"data-highlighted": isFocused ? "" : void 0,
 				"aria-disabled": disabled || void 0,
@@ -31411,7 +31457,7 @@ var MenuItemIndicator = import_react.forwardRef((props, forwardedRef) => {
 	const indicatorContext = useItemIndicatorContext(ITEM_INDICATOR_NAME$1, __scopeMenu);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
 		present: forceMount || isIndeterminate(indicatorContext.checked) || indicatorContext.checked === true,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
 			...itemIndicatorProps,
 			ref: forwardedRef,
 			"data-state": getCheckedState(indicatorContext.checked)
@@ -31422,7 +31468,7 @@ MenuItemIndicator.displayName = ITEM_INDICATOR_NAME$1;
 var SEPARATOR_NAME$2 = "MenuSeparator";
 var MenuSeparator = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeMenu, ...separatorProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		role: "separator",
 		"aria-orientation": "horizontal",
 		...separatorProps,
@@ -31693,7 +31739,7 @@ var CheckboxItem = MenuCheckboxItem;
 var RadioGroup = MenuRadioGroup;
 var RadioItem = MenuRadioItem;
 var ItemIndicator$1 = MenuItemIndicator;
-var Separator$1 = MenuSeparator;
+var Separator$3 = MenuSeparator;
 var Arrow2 = MenuArrow;
 var SubTrigger = MenuSubTrigger;
 var SubContent = MenuSubContent;
@@ -31739,7 +31785,7 @@ var DropdownMenuTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Anchor2, {
 		asChild: true,
 		...menuScope,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
 			type: "button",
 			id: context.triggerId,
 			"aria-haspopup": "menu",
@@ -31895,7 +31941,7 @@ var SEPARATOR_NAME$1 = "DropdownMenuSeparator";
 var DropdownMenuSeparator$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeDropdownMenu, ...separatorProps } = props;
 	const menuScope = useMenuScope(__scopeDropdownMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator$1, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator$3, {
 		...menuScope,
 		...separatorProps,
 		ref: forwardedRef
@@ -32168,7 +32214,7 @@ var Avatar$1 = import_react.forwardRef((props, forwardedRef) => {
 		scope: __scopeAvatar,
 		imageLoadingStatus,
 		onImageLoadingStatusChange: setImageLoadingStatus,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
 			...avatarProps,
 			ref: forwardedRef
 		})
@@ -32187,7 +32233,7 @@ var AvatarImage$1 = import_react.forwardRef((props, forwardedRef) => {
 	useLayoutEffect2(() => {
 		if (imageLoadingStatus !== "idle") handleLoadingStatusChange(imageLoadingStatus);
 	}, [imageLoadingStatus, handleLoadingStatusChange]);
-	return imageLoadingStatus === "loaded" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.img, {
+	return imageLoadingStatus === "loaded" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.img, {
 		...imageProps,
 		ref: forwardedRef,
 		src
@@ -32205,7 +32251,7 @@ var AvatarFallback$1 = import_react.forwardRef((props, forwardedRef) => {
 			return () => window.clearTimeout(timerId);
 		}
 	}, [delayMs]);
-	return canRender && context.imageLoadingStatus !== "loaded" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
+	return canRender && context.imageLoadingStatus !== "loaded" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
 		...fallbackProps,
 		ref: forwardedRef
 	}) : null;
@@ -32251,15 +32297,15 @@ function useImageLoadingStatus(src, { referrerPolicy, crossOrigin }) {
 	]);
 	return loadingStatus;
 }
-var Root$3 = Avatar$1;
+var Root$4 = Avatar$1;
 var Image = AvatarImage$1;
 var Fallback = AvatarFallback$1;
-var Avatar = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$3, {
+var Avatar = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$4, {
 	ref,
 	className: cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className),
 	...props
 }));
-Avatar.displayName = Root$3.displayName;
+Avatar.displayName = Root$4.displayName;
 var AvatarImage = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Image, {
 	ref,
 	className: cn("aspect-square h-full w-full", className),
@@ -32305,7 +32351,7 @@ var DialogTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeDialog, ...triggerProps } = props;
 	const context = useDialogContext(TRIGGER_NAME$2, __scopeDialog);
 	const composedTriggerRef = useComposedRefs(forwardedRef, context.triggerRef);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
 		type: "button",
 		"aria-haspopup": "dialog",
 		"aria-expanded": context.open,
@@ -32358,7 +32404,7 @@ var DialogOverlayImpl = import_react.forwardRef((props, forwardedRef) => {
 		as: Slot$2,
 		allowPinchZoom: true,
 		shards: [context.contentRef],
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 			"data-state": getState$2(context.open),
 			...overlayProps,
 			ref: forwardedRef,
@@ -32472,7 +32518,7 @@ var TITLE_NAME = "DialogTitle";
 var DialogTitle$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeDialog, ...titleProps } = props;
 	const context = useDialogContext(TITLE_NAME, __scopeDialog);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.h2, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.h2, {
 		id: context.titleId,
 		...titleProps,
 		ref: forwardedRef
@@ -32483,7 +32529,7 @@ var DESCRIPTION_NAME = "DialogDescription";
 var DialogDescription$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeDialog, ...descriptionProps } = props;
 	const context = useDialogContext(DESCRIPTION_NAME, __scopeDialog);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.p, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.p, {
 		id: context.descriptionId,
 		...descriptionProps,
 		ref: forwardedRef
@@ -32494,7 +32540,7 @@ var CLOSE_NAME$1 = "DialogClose";
 var DialogClose$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeDialog, ...closeProps } = props;
 	const context = useDialogContext(CLOSE_NAME$1, __scopeDialog);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
 		type: "button",
 		...closeProps,
 		ref: forwardedRef,
@@ -32540,7 +32586,7 @@ var DescriptionWarning = ({ contentRef, descriptionId }) => {
 	]);
 	return null;
 };
-var Root$2 = Dialog$1;
+var Root$3 = Dialog$1;
 var Trigger$2 = DialogTrigger$1;
 var Portal$3 = DialogPortal$1;
 var Overlay = DialogOverlay$1;
@@ -32548,7 +32594,7 @@ var Content = DialogContent$1;
 var Title = DialogTitle$1;
 var Description = DialogDescription$1;
 var Close = DialogClose$1;
-var Sheet = Root$2;
+var Sheet = Root$3;
 var SheetTrigger = Trigger$2;
 var SheetPortal = Portal$3;
 var SheetOverlay = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Overlay, {
@@ -32743,44 +32789,6 @@ function Badge({ className, variant, ...props }) {
 		...props
 	});
 }
-const mockVacancies = [
-	{
-		id: "1",
-		title: "Consultoria de Infraestrutura",
-		service: "Arquitetura Cloud",
-		value: 12500,
-		type: "Home Office",
-		serviceDate: "2024-03-15",
-		status: "Ativo"
-	},
-	{
-		id: "2",
-		title: "Desenvolvimento de MVP",
-		service: "Engenharia de Software",
-		value: 25e3,
-		type: "Home Office",
-		serviceDate: "2024-04-01",
-		status: "Ativo"
-	},
-	{
-		id: "3",
-		title: "Design de Interface App",
-		service: "UX/UI Design",
-		value: 8e3,
-		type: "Presencial",
-		serviceDate: "2024-03-20",
-		status: "Inativo"
-	},
-	{
-		id: "4",
-		title: "Otimização de Banco de Dados",
-		service: "Database Admin",
-		value: 15e3,
-		type: "Presencial",
-		serviceDate: "2024-04-10",
-		status: "Ativo"
-	}
-];
 const daysInYear = 365.2425;
 Math.pow(10, 8) * 24 * 60 * 60 * 1e3;
 const millisecondsInWeek = 6048e5;
@@ -34672,7 +34680,7 @@ const ptBR = {
 		firstWeekContainsDate: 1
 	}
 };
-var Dialog = Root$2;
+var Dialog = Root$3;
 var DialogTrigger = Trigger$2;
 var DialogPortal = Portal$3;
 var DialogOverlay = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Overlay, {
@@ -34855,7 +34863,7 @@ var SelectTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Anchor, {
 		asChild: true,
 		...popperScope,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
 			type: "button",
 			role: "combobox",
 			"aria-controls": context.contentId,
@@ -34905,7 +34913,7 @@ var SelectValue$1 = import_react.forwardRef((props, forwardedRef) => {
 	useLayoutEffect2(() => {
 		onValueNodeHasChildrenChange(hasChildren);
 	}, [onValueNodeHasChildrenChange, hasChildren]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
 		...valueProps,
 		ref: composedRefs,
 		style: { pointerEvents: "none" },
@@ -34916,7 +34924,7 @@ SelectValue$1.displayName = VALUE_NAME;
 var ICON_NAME = "SelectIcon";
 var SelectIcon = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, children, ...iconProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
 		"aria-hidden": true,
 		...iconProps,
 		ref: forwardedRef,
@@ -35261,7 +35269,7 @@ var SelectItemAlignedPosition = import_react.forwardRef((props, forwardedRef) =>
 				position: "fixed",
 				zIndex: contentZIndex
 			},
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 				...popperProps,
 				ref: composedRefs,
 				style: {
@@ -35309,7 +35317,7 @@ var SelectViewport = import_react.forwardRef((props, forwardedRef) => {
 		nonce
 	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection.Slot, {
 		scope: __scopeSelect,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 			"data-radix-select-viewport": "",
 			role: "presentation",
 			...viewportProps,
@@ -35356,7 +35364,7 @@ var SelectGroup$1 = import_react.forwardRef((props, forwardedRef) => {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectGroupContextProvider, {
 		scope: __scopeSelect,
 		id: groupId,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 			role: "group",
 			"aria-labelledby": groupId,
 			...groupProps,
@@ -35369,7 +35377,7 @@ var LABEL_NAME = "SelectLabel";
 var SelectLabel$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, ...labelProps } = props;
 	const groupContext = useSelectGroupContext(LABEL_NAME, __scopeSelect);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		id: groupContext.id,
 		...labelProps,
 		ref: forwardedRef
@@ -35409,7 +35417,7 @@ var SelectItem$1 = import_react.forwardRef((props, forwardedRef) => {
 			value,
 			disabled,
 			textValue,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 				role: "option",
 				"aria-labelledby": textId,
 				"data-highlighted": isFocused ? "" : void 0,
@@ -35477,7 +35485,7 @@ var SelectItemText = import_react.forwardRef((props, forwardedRef) => {
 		onNativeOptionRemove,
 		nativeOption
 	]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
 		id: itemContext.textId,
 		...itemTextProps,
 		ref: composedRefs
@@ -35487,7 +35495,7 @@ SelectItemText.displayName = ITEM_TEXT_NAME;
 var ITEM_INDICATOR_NAME = "SelectItemIndicator";
 var SelectItemIndicator = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, ...itemIndicatorProps } = props;
-	return useSelectItemContext(ITEM_INDICATOR_NAME, __scopeSelect).isSelected ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
+	return useSelectItemContext(ITEM_INDICATOR_NAME, __scopeSelect).isSelected ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
 		"aria-hidden": true,
 		...itemIndicatorProps,
 		ref: forwardedRef
@@ -35566,7 +35574,7 @@ var SelectScrollButtonImpl = import_react.forwardRef((props, forwardedRef) => {
 	useLayoutEffect2(() => {
 		getItems().find((item) => item.ref.current === document.activeElement)?.ref.current?.scrollIntoView({ block: "nearest" });
 	}, [getItems]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		"aria-hidden": true,
 		...scrollIndicatorProps,
 		ref: forwardedRef,
@@ -35589,7 +35597,7 @@ var SelectScrollButtonImpl = import_react.forwardRef((props, forwardedRef) => {
 var SEPARATOR_NAME = "SelectSeparator";
 var SelectSeparator$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, ...separatorProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		"aria-hidden": true,
 		...separatorProps,
 		ref: forwardedRef
@@ -35625,7 +35633,7 @@ var SelectBubbleInput = import_react.forwardRef(({ __scopeSelect, value, ...prop
 			select.dispatchEvent(event);
 		}
 	}, [prevValue, value]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.select, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.select, {
 		...props,
 		style: {
 			...VISUALLY_HIDDEN_STYLES,
@@ -35689,7 +35697,7 @@ var ItemText = SelectItemText;
 var ItemIndicator = SelectItemIndicator;
 var ScrollUpButton = SelectScrollUpButton$1;
 var ScrollDownButton = SelectScrollDownButton$1;
-var Separator = SelectSeparator$1;
+var Separator$2 = SelectSeparator$1;
 var Select = Root2$1;
 var SelectValue = Value;
 var SelectTrigger = import_react.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Trigger$1, {
@@ -35747,12 +35755,12 @@ var SelectItem = import_react.forwardRef(({ className, children, ...props }, ref
 	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ItemText, { children })]
 }));
 SelectItem.displayName = Item.displayName;
-var SelectSeparator = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator, {
+var SelectSeparator = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator$2, {
 	ref,
 	className: cn("-mx-1 my-1 h-px bg-muted", className),
 	...props
 }));
-SelectSeparator.displayName = Separator.displayName;
+SelectSeparator.displayName = Separator$2.displayName;
 var SWITCH_NAME = "Switch";
 var [createSwitchContext, createSwitchScope] = createContextScope(SWITCH_NAME);
 var [SwitchProvider, useSwitchContext] = createSwitchContext(SWITCH_NAME);
@@ -35772,7 +35780,7 @@ var Switch$1 = import_react.forwardRef((props, forwardedRef) => {
 		scope: __scopeSwitch,
 		checked,
 		disabled,
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
 			type: "button",
 			role: "switch",
 			"aria-checked": checked,
@@ -35808,7 +35816,7 @@ var THUMB_NAME = "SwitchThumb";
 var SwitchThumb = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSwitch, ...thumbProps } = props;
 	const context = useSwitchContext(THUMB_NAME, __scopeSwitch);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
 		"data-state": getState$1(context.checked),
 		"data-disabled": context.disabled ? "" : void 0,
 		...thumbProps,
@@ -35858,15 +35866,15 @@ SwitchBubbleInput.displayName = BUBBLE_INPUT_NAME;
 function getState$1(checked) {
 	return checked ? "checked" : "unchecked";
 }
-var Root$1 = Switch$1;
+var Root$2 = Switch$1;
 var Thumb = SwitchThumb;
-var Switch = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$1, {
+var Switch = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$2, {
 	className: cn("peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input", className),
 	...props,
 	ref,
 	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Thumb, { className: cn("pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0") })
 }));
-Switch.displayName = Root$1.displayName;
+Switch.displayName = Root$2.displayName;
 var POPOVER_NAME = "Popover";
 var [createPopoverContext, createPopoverScope] = createContextScope(POPOVER_NAME, [createPopperScope]);
 var usePopperScope = createPopperScope();
@@ -35923,7 +35931,7 @@ var PopoverTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
 	const context = usePopoverContext(TRIGGER_NAME, __scopePopover);
 	const popperScope = usePopperScope(__scopePopover);
 	const composedTriggerRef = useComposedRefs(forwardedRef, context.triggerRef);
-	const trigger = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
+	const trigger = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
 		type: "button",
 		"aria-haspopup": "dialog",
 		"aria-expanded": context.open,
@@ -36079,7 +36087,7 @@ var CLOSE_NAME = "PopoverClose";
 var PopoverClose = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopePopover, ...closeProps } = props;
 	const context = usePopoverContext(CLOSE_NAME, __scopePopover);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
 		type: "button",
 		...closeProps,
 		ref: forwardedRef,
@@ -36763,7 +36771,7 @@ function PreviousMonthButton(props) {
 	const { components } = useDayPicker();
 	return import_react.createElement(components.Button, { ...props });
 }
-function Root(props) {
+function Root$1(props) {
 	const { rootRef, ...rest } = props;
 	return import_react.createElement("div", {
 		...rest,
@@ -36815,7 +36823,7 @@ var custom_components_exports = /* @__PURE__ */ __export({
 	NextMonthButton: () => NextMonthButton,
 	Option: () => Option,
 	PreviousMonthButton: () => PreviousMonthButton,
-	Root: () => Root,
+	Root: () => Root$1,
 	Select: () => Select$1,
 	Week: () => Week,
 	WeekNumber: () => WeekNumber,
@@ -38382,6 +38390,102 @@ function CalendarDayButton({ className, day, modifiers, ...props }) {
 		...props
 	});
 }
+const mockVacancies = [
+	{
+		id: "1",
+		title: "Consultoria de Infraestrutura",
+		service: "Arquitetura Cloud",
+		value: 12500,
+		type: "Home Office",
+		serviceDate: "2024-03-15",
+		status: "Ativo",
+		availability: "Integral (Segunda a Sexta)",
+		requirements: "• Experiência comprovada em AWS e Azure\n• Conhecimento avançado em Terraform e Kubernetes\n• Inglês fluente para conversação\n• Certificação AWS Solutions Architect é um diferencial.",
+		training: true,
+		contact: "tech.recruiting@empresa.com",
+		equipmentQuestion: "Qual modelo de notebook/computador você possui?",
+		customQuestions: [{ question: "Possui alguma certificação cloud ativa? Qual?" }, { question: "Qual foi o maior desafio de infraestrutura que você já resolveu?" }]
+	},
+	{
+		id: "2",
+		title: "Desenvolvimento de MVP",
+		service: "Engenharia de Software",
+		value: 25e3,
+		type: "Home Office",
+		serviceDate: "2024-04-01",
+		status: "Ativo",
+		availability: "Flexível",
+		requirements: "• Domínio de React, Node.js e TypeScript\n• Experiência prévia na construção de produtos do zero\n• Conhecimento em banco de dados relacionais e NoSQL\n• Foco em entrega de valor e agilidade.",
+		training: false,
+		contact: "produto@startup.io",
+		equipmentQuestion: "Qual modelo de notebook/computador você possui?",
+		customQuestions: [{ question: "Compartilhe o link do seu GitHub ou portfólio." }]
+	},
+	{
+		id: "3",
+		title: "Design de Interface App",
+		service: "UX/UI Design",
+		value: 8e3,
+		type: "Presencial",
+		serviceDate: "2024-03-20",
+		status: "Inativo",
+		availability: "Parcial (Tardes)",
+		requirements: "• Portfólio focado em aplicativos mobile (iOS e Android)\n• Domínio do Figma e criação de Design Systems\n• Boa capacidade de comunicação com desenvolvedores\n• Residir na região metropolitana.",
+		training: true,
+		contact: "design.team@agencia.com",
+		cep: "01310-100",
+		distance: "15",
+		equipmentQuestion: "Qual modelo de celular você possui?",
+		customQuestions: [{ question: "Você tem experiência com testes de usabilidade?" }]
+	},
+	{
+		id: "4",
+		title: "Otimização de Banco de Dados",
+		service: "Database Admin",
+		value: 15e3,
+		type: "Presencial",
+		serviceDate: "2024-04-10",
+		status: "Ativo",
+		availability: "Integral",
+		requirements: "• Especialista em PostgreSQL e performance tuning\n• Experiência com migração de grandes volumes de dados\n• Conhecimento em rotinas de backup e disaster recovery.",
+		training: false,
+		contact: "infra@datacenter.net",
+		cep: "04538-132",
+		distance: "30",
+		equipmentQuestion: "Qual modelo de celular você possui?",
+		customQuestions: []
+	}
+];
+var VacanciesContext = (0, import_react.createContext)(null);
+function VacanciesProvider({ children }) {
+	const [vacancies, setVacancies] = (0, import_react.useState)(mockVacancies);
+	const addVacancy = (vacancy) => {
+		setVacancies((prev) => [vacancy, ...prev]);
+	};
+	const updateVacancy = (id, data) => {
+		setVacancies((prev) => prev.map((v) => v.id === id ? {
+			...v,
+			...data
+		} : v));
+	};
+	const deleteVacancy = (id) => {
+		setVacancies((prev) => prev.filter((v) => v.id !== id));
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VacanciesContext.Provider, {
+		value: {
+			vacancies,
+			addVacancy,
+			updateVacancy,
+			deleteVacancy
+		},
+		children
+	});
+}
+function useVacancies() {
+	const context = (0, import_react.useContext)(VacanciesContext);
+	if (!context) throw new Error("useVacancies must be used within a VacanciesProvider");
+	return context;
+}
 var formSchema = object({
 	title: string().min(2, "O título deve ter pelo menos 2 caracteres."),
 	service: string().min(2, "O serviço é obrigatório."),
@@ -38410,24 +38514,27 @@ var formSchema = object({
 		});
 	}
 });
-function NovaVagaDialog({ onAddVacancy }) {
+function NovaVagaDialog({ vacancy, customTrigger }) {
 	const [open, setOpen] = (0, import_react.useState)(false);
 	const [step, setStep] = (0, import_react.useState)(1);
+	const { addVacancy, updateVacancy } = useVacancies();
+	const isEditMode = !!vacancy;
 	const form = useForm({
 		resolver: a(formSchema),
 		defaultValues: {
-			title: "",
-			service: "",
-			value: "",
-			availability: "",
-			requirements: "",
-			training: false,
-			contact: "",
-			type: "Presencial",
-			cep: "",
-			distance: "",
-			equipmentQuestion: "Qual modelo de celular você possui?",
-			customQuestions: []
+			title: vacancy?.title || "",
+			service: vacancy?.service || "",
+			value: vacancy ? String(vacancy.value) : "",
+			availability: vacancy?.availability || "",
+			requirements: vacancy?.requirements || "",
+			serviceDate: vacancy ? /* @__PURE__ */ new Date(vacancy.serviceDate + "T12:00:00") : void 0,
+			training: vacancy?.training || false,
+			contact: vacancy?.contact || "",
+			type: vacancy?.type || "Presencial",
+			cep: vacancy?.cep || "",
+			distance: vacancy?.distance || "",
+			equipmentQuestion: vacancy?.equipmentQuestion || "Qual modelo de celular você possui?",
+			customQuestions: vacancy?.customQuestions || []
 		}
 	});
 	const watchType = form.watch("type");
@@ -38436,9 +38543,14 @@ function NovaVagaDialog({ onAddVacancy }) {
 		name: "customQuestions"
 	});
 	(0, import_react.useEffect)(() => {
-		if (watchType === "Home Office") form.setValue("equipmentQuestion", "Qual modelo de notebook/computador você possui?");
+		if (!isEditMode || watchType !== vacancy?.type) if (watchType === "Home Office") form.setValue("equipmentQuestion", "Qual modelo de notebook/computador você possui?");
 		else form.setValue("equipmentQuestion", "Qual modelo de celular você possui?");
-	}, [watchType, form]);
+	}, [
+		watchType,
+		form,
+		isEditMode,
+		vacancy
+	]);
 	const onNext = async () => {
 		if (await form.trigger([
 			"title",
@@ -38454,18 +38566,30 @@ function NovaVagaDialog({ onAddVacancy }) {
 		])) setStep(2);
 	};
 	const onSubmit = (data) => {
-		if (onAddVacancy) onAddVacancy({
-			id: Math.random().toString(36).substr(2, 9),
+		const vacancyData = {
 			title: data.title,
 			service: data.service,
 			value: Number(data.value),
 			type: data.type,
 			serviceDate: data.serviceDate.toISOString().split("T")[0],
-			status: "Ativo"
+			availability: data.availability,
+			requirements: data.requirements,
+			training: data.training,
+			contact: data.contact,
+			cep: data.cep,
+			distance: data.distance,
+			equipmentQuestion: data.equipmentQuestion,
+			customQuestions: data.customQuestions
+		};
+		if (isEditMode && vacancy) updateVacancy(vacancy.id, vacancyData);
+		else addVacancy({
+			id: Math.random().toString(36).substr(2, 9),
+			status: "Ativo",
+			...vacancyData
 		});
 		setOpen(false);
 		setStep(1);
-		form.reset();
+		if (!isEditMode) form.reset();
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dialog, {
 		open,
@@ -38473,12 +38597,12 @@ function NovaVagaDialog({ onAddVacancy }) {
 			setOpen(val);
 			if (!val) {
 				setStep(1);
-				form.reset();
+				if (!isEditMode) form.reset();
 			}
 		},
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogTrigger, {
 			asChild: true,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+			children: customTrigger ? customTrigger : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
 				className: "w-full sm:w-auto bg-success hover:bg-success/90 text-white shadow-md text-base px-6 py-6 rounded-lg tap-effect border-none",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Plus, { className: "mr-2 h-5 w-5" }), "Nova Vaga"]
 			})
@@ -38490,7 +38614,7 @@ function NovaVagaDialog({ onAddVacancy }) {
 					className: "text-left space-y-0",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogTitle, {
 						className: "text-xl font-bold text-secondary flex items-center gap-2",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Briefcase, { className: "w-5 h-5 text-primary" }), "Criar Nova Vaga"]
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Briefcase, { className: "w-5 h-5 text-primary" }), isEditMode ? "Editar Vaga" : "Criar Nova Vaga"]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogDescription, {
 						className: "mt-1 text-muted-foreground",
 						children: step === 1 ? "Preencha os dados essenciais da vaga." : "Defina as perguntas para os candidatos."
@@ -38614,7 +38738,7 @@ function NovaVagaDialog({ onAddVacancy }) {
 																mode: "single",
 																selected: field.value,
 																onSelect: field.onChange,
-																disabled: (date$3) => date$3 < /* @__PURE__ */ new Date() || date$3 < /* @__PURE__ */ new Date("1900-01-01"),
+																disabled: (date$3) => date$3 < /* @__PURE__ */ new Date("1900-01-01"),
 																initialFocus: true
 															})
 														})] }),
@@ -38860,7 +38984,7 @@ function NovaVagaDialog({ onAddVacancy }) {
 								}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
 									type: "submit",
 									className: "bg-success hover:bg-success/90 text-white min-w-[120px] shadow-sm tap-effect",
-									children: "Salvar Vaga"
+									children: isEditMode ? "Salvar Vaga" : "Criar Vaga"
 								})]
 							})
 						]
@@ -38871,10 +38995,7 @@ function NovaVagaDialog({ onAddVacancy }) {
 	});
 }
 function Vagas() {
-	const [vacancies, setVacancies] = (0, import_react.useState)(mockVacancies);
-	const handleAddVacancy = (newVacancy) => {
-		setVacancies((prev) => [newVacancy, ...prev]);
-	};
+	const { vacancies } = useVacancies();
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "container mx-auto px-4 py-8 max-w-7xl pb-24",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -38885,7 +39006,7 @@ function Vagas() {
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 				className: "text-muted-foreground mt-1.5",
 				children: "Gerencie todas as vagas de serviço e acompanhe o status de cada oportunidade."
-			})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NovaVagaDialog, { onAddVacancy: handleAddVacancy })]
+			})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NovaVagaDialog, {})]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6",
 			children: vacancies.map((vacancy, index$1) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
@@ -38900,6 +39021,7 @@ function Vagas() {
 	});
 }
 function VacancyCard({ vacancy }) {
+	const navigate = useNavigate();
 	const statusStyles = {
 		Ativo: "bg-success/15 text-success border-success/20",
 		Inativo: "bg-muted text-muted-foreground border-border"
@@ -38917,8 +39039,15 @@ function VacancyCard({ vacancy }) {
 			year: "numeric"
 		});
 	};
+	const handleCardClick = () => {
+		navigate(`/vagas/${vacancy.id}`);
+	};
+	const handleMenuClick = (e) => {
+		e.stopPropagation();
+	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-		className: "flex flex-col h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border/80 bg-card/50 overflow-hidden group",
+		onClick: handleCardClick,
+		className: "flex flex-col h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border/80 bg-card/50 overflow-hidden group cursor-pointer",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
 			className: "p-6 flex-1 flex flex-col",
 			children: [
@@ -38928,33 +39057,37 @@ function VacancyCard({ vacancy }) {
 						variant: "outline",
 						className: cn("font-medium rounded-full px-3 py-1 shadow-sm", statusStyles[vacancy.status]),
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: cn("h-1.5 w-1.5 rounded-full mr-2", vacancy.status === "Ativo" ? "bg-success animate-pulse" : "bg-muted-foreground") }), vacancy.status]
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DropdownMenu, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuTrigger, {
-						asChild: true,
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							variant: "ghost",
-							size: "icon",
-							className: "h-8 w-8 -mr-2 text-muted-foreground hover:text-secondary focus-visible:ring-1 focus-visible:ring-accent",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EllipsisVertical, { className: "h-4 w-4" })
-						})
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DropdownMenuContent, {
-						align: "end",
-						className: "w-48",
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuItem, {
-								className: "cursor-pointer",
-								children: "Editar vaga"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuItem, {
-								className: "cursor-pointer",
-								children: "Duplicar oportunidade"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuSeparator, {}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuItem, {
-								className: "text-destructive focus:text-destructive cursor-pointer",
-								children: "Excluir vaga"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						onClick: handleMenuClick,
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DropdownMenu, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuTrigger, {
+							asChild: true,
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+								variant: "ghost",
+								size: "icon",
+								className: "h-8 w-8 -mr-2 text-muted-foreground hover:text-secondary focus-visible:ring-1 focus-visible:ring-accent",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EllipsisVertical, { className: "h-4 w-4" })
 							})
-						]
-					})] })]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DropdownMenuContent, {
+							align: "end",
+							className: "w-48",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuItem, {
+									className: "cursor-pointer",
+									onClick: () => navigate(`/vagas/${vacancy.id}`),
+									children: "Ver Detalhes"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuItem, {
+									className: "cursor-pointer",
+									children: "Duplicar oportunidade"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuSeparator, {}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuItem, {
+									className: "text-destructive focus:text-destructive cursor-pointer",
+									children: "Excluir vaga"
+								})
+							]
+						})] })
+					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "mb-6",
@@ -39021,30 +39154,313 @@ function VacancyCard({ vacancy }) {
 		})]
 	});
 }
+var NAME = "Separator";
+var DEFAULT_ORIENTATION = "horizontal";
+var ORIENTATIONS = ["horizontal", "vertical"];
+var Separator$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { decorative, orientation: orientationProp = DEFAULT_ORIENTATION, ...domProps } = props;
+	const orientation = isValidOrientation(orientationProp) ? orientationProp : DEFAULT_ORIENTATION;
+	const ariaOrientation = orientation === "vertical" ? orientation : void 0;
+	const semanticProps = decorative ? { role: "none" } : {
+		"aria-orientation": ariaOrientation,
+		role: "separator"
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+		"data-orientation": orientation,
+		...semanticProps,
+		...domProps,
+		ref: forwardedRef
+	});
+});
+Separator$1.displayName = NAME;
+function isValidOrientation(orientation) {
+	return ORIENTATIONS.includes(orientation);
+}
+var Root = Separator$1;
+var Separator = import_react.forwardRef(({ className, orientation = "horizontal", decorative = true, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root, {
+	ref,
+	decorative,
+	orientation,
+	className: cn("shrink-0 bg-border", orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]", className),
+	...props
+}));
+Separator.displayName = Root.displayName;
+function VagasDetalhes() {
+	const { id } = useParams();
+	const navigate = useNavigate();
+	const { vacancies } = useVacancies();
+	const vacancy = vacancies.find((v) => v.id === id);
+	if (!vacancy) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "container mx-auto px-4 py-16 text-center",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+			className: "text-2xl font-bold text-secondary mb-4",
+			children: "Vaga não encontrada"
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+			onClick: () => navigate("/vagas"),
+			variant: "outline",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowLeft, { className: "mr-2 h-4 w-4" }), " Voltar para Vagas"]
+		})]
+	});
+	const formatCurrency = (value) => {
+		return new Intl.NumberFormat("pt-BR", {
+			style: "currency",
+			currency: "BRL"
+		}).format(value);
+	};
+	const formatDate = (dateString) => {
+		return (/* @__PURE__ */ new Date(dateString + "T12:00:00")).toLocaleDateString("pt-BR", {
+			day: "2-digit",
+			month: "long",
+			year: "numeric"
+		});
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "container mx-auto px-4 py-8 max-w-5xl pb-24 animate-in fade-in slide-in-from-bottom-4 duration-500",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "mb-6",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+					variant: "ghost",
+					onClick: () => navigate("/vagas"),
+					className: "text-muted-foreground hover:text-secondary -ml-4",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowLeft, { className: "mr-2 h-4 w-4" }), " Voltar para Vagas"]
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "flex items-center gap-3 mb-2",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+						className: "text-3xl md:text-4xl font-bold text-secondary tracking-tight",
+						children: vacancy.title
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Badge, {
+						variant: "outline",
+						className: cn("font-medium rounded-full px-3 py-1 shadow-sm", {
+							Ativo: "bg-success/15 text-success border-success/20",
+							Inativo: "bg-muted text-muted-foreground border-border"
+						}[vacancy.status]),
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: cn("h-1.5 w-1.5 rounded-full mr-2", vacancy.status === "Ativo" ? "bg-success animate-pulse" : "bg-muted-foreground") }), vacancy.status]
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "flex items-center text-accent font-medium",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Briefcase, { className: "h-4 w-4 mr-2" }), vacancy.service]
+				})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(NovaVagaDialog, {
+						vacancy,
+						customTrigger: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+							variant: "outline",
+							className: "w-full sm:w-auto border-border shadow-sm",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SquarePen, { className: "mr-2 h-4 w-4" }), " Editar"]
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+						className: "w-full sm:w-auto bg-[#04b5b1] hover:bg-[#048a94] text-white shadow-md tap-effect border-none",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Search, { className: "mr-2 h-4 w-4" }), " Buscar no Banco de Talentos"]
+					})]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "grid grid-cols-1 lg:grid-cols-3 gap-8",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "lg:col-span-2 space-y-8",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+							className: "border-border shadow-sm overflow-hidden",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+								className: "bg-muted/20 border-b border-border",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+									className: "text-xl flex items-center gap-2",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Clock, { className: "h-5 w-5 text-primary" }), "Informações Gerais"]
+								})
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
+								className: "p-6",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "grid grid-cols-1 sm:grid-cols-2 gap-6",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											className: "text-sm font-medium text-muted-foreground mb-1",
+											children: "Valor"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "flex items-center text-lg font-semibold text-secondary",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DollarSign, { className: "h-5 w-5 mr-1 text-primary" }), formatCurrency(vacancy.value)]
+										})] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											className: "text-sm font-medium text-muted-foreground mb-1",
+											children: "Data do Serviço"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "flex items-center text-lg font-semibold text-secondary",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Calendar, { className: "h-5 w-5 mr-1 text-primary" }), formatDate(vacancy.serviceDate)]
+										})] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											className: "text-sm font-medium text-muted-foreground mb-1",
+											children: "Disponibilidade"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+											className: "flex items-center text-secondary font-medium",
+											children: vacancy.availability
+										})] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											className: "text-sm font-medium text-muted-foreground mb-1",
+											children: "Contato"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "flex items-center text-secondary font-medium",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Mail, { className: "h-4 w-4 mr-2 text-muted-foreground" }), vacancy.contact]
+										})] })
+									]
+								})
+							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+							className: "border-border shadow-sm overflow-hidden",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+								className: "bg-muted/20 border-b border-border",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+									className: "text-xl flex items-center gap-2",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, { className: "h-5 w-5 text-primary" }), "Requisitos e Descrição"]
+								})
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+								className: "p-6",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										className: "whitespace-pre-wrap text-secondary/90 leading-relaxed",
+										children: vacancy.requirements
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator, { className: "my-6" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "flex items-center justify-between p-4 bg-muted/30 rounded-lg border border-border",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											className: "font-semibold text-secondary",
+											children: "Treinamento Fornecido"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											className: "text-sm text-muted-foreground",
+											children: "A empresa oferece capacitação inicial?"
+										})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
+											variant: vacancy.training ? "default" : "secondary",
+											className: "px-3 py-1 text-sm",
+											children: vacancy.training ? "Sim, incluso" : "Não"
+										})]
+									})
+								]
+							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+							className: "border-border shadow-sm overflow-hidden",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
+								className: "bg-muted/20 border-b border-border",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+									className: "text-xl flex items-center gap-2",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Search, { className: "h-5 w-5 text-primary" }), "Perguntas aos Candidatos"]
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, { children: "Questionário exigido no momento da candidatura" })]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+								className: "p-6 space-y-4",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "flex gap-4 p-4 rounded-lg bg-accent/5 border border-accent/20",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+											className: "w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center text-accent text-sm font-bold shrink-0",
+											children: "1"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											className: "text-xs font-semibold text-accent uppercase tracking-wider mb-1",
+											children: "Equipamento Necessário (Automática)"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											className: "text-secondary font-medium",
+											children: vacancy.equipmentQuestion
+										})] })]
+									}),
+									vacancy.customQuestions.map((q, index$1) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "flex gap-4 p-4 rounded-lg bg-card border border-border shadow-sm",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+											className: "w-6 h-6 rounded-full bg-muted flex items-center justify-center text-muted-foreground text-sm font-bold shrink-0",
+											children: index$1 + 2
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											className: "text-secondary font-medium",
+											children: q.question
+										}) })]
+									}, index$1)),
+									vacancy.customQuestions.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										className: "text-center py-6 text-muted-foreground text-sm border border-dashed border-border rounded-lg",
+										children: "Nenhuma pergunta personalizada adicional."
+									})
+								]
+							})]
+						})
+					]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "space-y-6",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+						className: "border-border shadow-sm overflow-hidden sticky top-24",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+							className: "bg-muted/20 border-b border-border",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+								className: "text-lg flex items-center gap-2",
+								children: [vacancy.type === "Presencial" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MapPin, { className: "h-5 w-5 text-primary" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Monitor, { className: "h-5 w-5 text-primary" }), "Logística"]
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+							className: "p-6 space-y-6",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								className: "text-sm font-medium text-muted-foreground mb-1",
+								children: "Tipo de Vaga"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "inline-flex items-center px-3 py-1 rounded-md bg-primary/10 text-primary font-semibold",
+								children: vacancy.type
+							})] }), vacancy.type === "Presencial" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator, {}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									className: "text-sm font-medium text-muted-foreground mb-1",
+									children: "CEP Base"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									className: "text-secondary font-medium",
+									children: vacancy.cep || "Não informado"
+								})] }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									className: "text-sm font-medium text-muted-foreground mb-1",
+									children: "Raio de Distância Aceito"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+									className: "text-secondary font-medium",
+									children: [
+										"Até ",
+										vacancy.distance || "0",
+										" km"
+									]
+								})] })
+							] })]
+						})]
+					})
+				})]
+			})
+		]
+	});
+}
 var App = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BrowserRouter, {
 	future: {
 		v7_startTransition: false,
 		v7_relativeSplatPath: false
 	},
-	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AuthProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TooltipProvider, { children: [
+	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AuthProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VacanciesProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TooltipProvider, { children: [
 		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster, {}),
 		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster$1, {}),
 		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Routes, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Route, {
 			element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Layout, {}),
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-				path: "/",
-				element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Index, {})
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-				path: "/vagas",
-				element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Vagas, {})
-			})]
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+					path: "/",
+					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Index, {})
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+					path: "/vagas",
+					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Vagas, {})
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+					path: "/vagas/:id",
+					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VagasDetalhes, {})
+				})
+			]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
 			path: "*",
 			element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NotFound_default, {})
 		})] })
-	] }) })
+	] }) }) })
 });
 var App_default = App;
 (0, import_client.createRoot)(document.getElementById("root")).render(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(App_default, {}));
 
-//# sourceMappingURL=index-Dvro0dn7.js.map
+//# sourceMappingURL=index-CPeXT0Dw.js.map

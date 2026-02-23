@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Calendar,
   DollarSign,
@@ -18,16 +18,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { mockVacancies, Vacancy } from '@/lib/mock-data'
+import { Vacancy } from '@/lib/mock-data'
 import { cn } from '@/lib/utils'
 import { NovaVagaDialog } from '@/components/vagas/NovaVagaDialog'
+import { useVacancies } from '@/contexts/VacanciesContext'
 
 export default function Vagas() {
-  const [vacancies, setVacancies] = useState<Vacancy[]>(mockVacancies)
-
-  const handleAddVacancy = (newVacancy: Vacancy) => {
-    setVacancies((prev) => [newVacancy, ...prev])
-  }
+  const { vacancies } = useVacancies()
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl pb-24">
@@ -42,7 +39,7 @@ export default function Vagas() {
             oportunidade.
           </p>
         </div>
-        <NovaVagaDialog onAddVacancy={handleAddVacancy} />
+        <NovaVagaDialog />
       </div>
 
       {/* Vacancy Dashboard */}
@@ -65,6 +62,8 @@ export default function Vagas() {
 }
 
 function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
+  const navigate = useNavigate()
+
   const statusStyles = {
     Ativo: 'bg-success/15 text-success border-success/20',
     Inativo: 'bg-muted text-muted-foreground border-border',
@@ -78,7 +77,6 @@ function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
   }
 
   const formatDate = (dateString: string) => {
-    // Add timezone offset to ensure correct day parsing from ISO string
     const date = new Date(dateString + 'T12:00:00')
     return date.toLocaleDateString('pt-BR', {
       day: '2-digit',
@@ -87,8 +85,19 @@ function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
     })
   }
 
+  const handleCardClick = () => {
+    navigate(`/vagas/${vacancy.id}`)
+  }
+
+  const handleMenuClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+  }
+
   return (
-    <Card className="flex flex-col h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border/80 bg-card/50 overflow-hidden group">
+    <Card
+      onClick={handleCardClick}
+      className="flex flex-col h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border/80 bg-card/50 overflow-hidden group cursor-pointer"
+    >
       <CardContent className="p-6 flex-1 flex flex-col">
         <div className="flex justify-between items-start mb-5">
           <Badge
@@ -108,29 +117,34 @@ function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
             />
             {vacancy.status}
           </Badge>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 -mr-2 text-muted-foreground hover:text-secondary focus-visible:ring-1 focus-visible:ring-accent"
-              >
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem className="cursor-pointer">
-                Editar vaga
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
-                Duplicar oportunidade
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive focus:text-destructive cursor-pointer">
-                Excluir vaga
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div onClick={handleMenuClick}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 -mr-2 text-muted-foreground hover:text-secondary focus-visible:ring-1 focus-visible:ring-accent"
+                >
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => navigate(`/vagas/${vacancy.id}`)}
+                >
+                  Ver Detalhes
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  Duplicar oportunidade
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="text-destructive focus:text-destructive cursor-pointer">
+                  Excluir vaga
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
         <div className="mb-6">
