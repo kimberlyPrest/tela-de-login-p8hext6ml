@@ -7,6 +7,7 @@ import NotFound from './pages/NotFound'
 import Layout from './components/Layout'
 import Vagas from './pages/vagas/Vagas'
 import VagasDetalhes from './pages/vagas/VagasDetalhes'
+import BancoTalentos from './pages/banco-talentos/BancoTalentos'
 import { AuthProvider } from './contexts/AuthContext'
 import { VacanciesProvider } from './contexts/VacanciesContext'
 
@@ -24,6 +25,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/vagas" element={<Vagas />} />
               <Route path="/vagas/:id" element={<VagasDetalhes />} />
+              <Route path="/banco-talentos" element={<BancoTalentos />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

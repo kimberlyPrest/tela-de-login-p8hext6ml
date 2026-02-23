@@ -99,3 +99,98 @@ export const mockVacancies: Vacancy[] = [
     customQuestions: [],
   },
 ]
+
+export interface Candidate {
+  id: string
+  name: string
+  equipmentType: 'Notebook' | 'Celular'
+  equipmentModel: string
+  city: string
+  state: string
+  availability: string
+  cep: string
+  distance: number
+  workType: 'Presencial' | 'Home Office'
+  avatarUrl: string
+}
+
+export const mockCandidates: Candidate[] = [
+  {
+    id: 'c1',
+    name: 'Ana Silva',
+    equipmentType: 'Notebook',
+    equipmentModel: 'MacBook Air M1',
+    city: 'São Paulo',
+    state: 'SP',
+    availability: 'Integral',
+    cep: '01310-100',
+    distance: 12,
+    workType: 'Home Office',
+    avatarUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=10',
+  },
+  {
+    id: 'c2',
+    name: 'Carlos Oliveira',
+    equipmentType: 'Celular',
+    equipmentModel: 'iPhone 13',
+    city: 'São Paulo',
+    state: 'SP',
+    availability: 'Tardes',
+    cep: '04538-132',
+    distance: 5,
+    workType: 'Presencial',
+    avatarUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=11',
+  },
+  {
+    id: 'c3',
+    name: 'Mariana Costa',
+    equipmentType: 'Notebook',
+    equipmentModel: 'Dell XPS 15',
+    city: 'Rio de Janeiro',
+    state: 'RJ',
+    availability: 'Integral',
+    cep: '20040-002',
+    distance: 400,
+    workType: 'Home Office',
+    avatarUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=12',
+  },
+  {
+    id: 'c4',
+    name: 'Pedro Santos',
+    equipmentType: 'Celular',
+    equipmentModel: 'Galaxy S22',
+    city: 'Campinas',
+    state: 'SP',
+    availability: 'Manhãs',
+    cep: '13010-000',
+    distance: 90,
+    workType: 'Presencial',
+    avatarUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=13',
+  },
+  {
+    id: 'c5',
+    name: 'Juliana Mendes',
+    equipmentType: 'Notebook',
+    equipmentModel: 'Lenovo ThinkPad T14',
+    city: 'Belo Horizonte',
+    state: 'MG',
+    availability: 'Integral',
+    cep: '30110-000',
+    distance: 500,
+    workType: 'Home Office',
+    avatarUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=14',
+  },
+  {
+    id: 'c6',
+    name: 'Rafael Lima',
+    equipmentType: 'Celular',
+    equipmentModel: 'Motorola Edge 30',
+    city: 'Curitiba',
+    state: 'PR',
+    availability: 'Flexível',
+    cep: '80020-000',
+    distance: 8,
+    workType: 'Presencial',
+    avatarUrl: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=15',
+  },
+]

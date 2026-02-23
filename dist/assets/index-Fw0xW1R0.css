@@ -1093,6 +1093,10 @@ body{
   height: 1rem;
 }
 
+.h-40{
+  height: 10rem;
+}
+
 .h-5{
   height: 1.25rem;
 }
@@ -1700,6 +1704,10 @@ body{
   overflow: hidden;
 }
 
+.overflow-x-auto{
+  overflow-x: auto;
+}
+
 .overflow-y-auto{
   overflow-y: auto;
 }
@@ -1718,6 +1726,10 @@ body{
 
 .break-words{
   overflow-wrap: break-word;
+}
+
+.rounded{
+  border-radius: 0.25rem;
 }
 
 .rounded-\[2px\]{
@@ -1816,6 +1828,14 @@ body{
   border-style: none;
 }
 
+.border-\[\#048a94\]\/20{
+  border-color: rgb(4 138 148 / 0.2);
+}
+
+.border-\[\#04b5b1\]\/20{
+  border-color: rgb(4 181 177 / 0.2);
+}
+
 .border-\[--color-border\]{
   border-color: var(--color-border);
 }
@@ -1889,6 +1909,15 @@ body{
   background-color: rgb(4 181 177 / var(--tw-bg-opacity, 1));
 }
 
+.bg-\[\#04b5b1\]\/10{
+  background-color: rgb(4 181 177 / 0.1);
+}
+
+.bg-\[\#34a888\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(52 168 136 / var(--tw-bg-opacity, 1));
+}
+
 .bg-\[--color-bg\]{
   background-color: var(--color-bg);
 }
@@ -1937,6 +1966,14 @@ body{
   background-color: hsl(var(--card) / 0.5);
 }
 
+.bg-card\/60{
+  background-color: hsl(var(--card) / 0.6);
+}
+
+.bg-card\/80{
+  background-color: hsl(var(--card) / 0.8);
+}
+
 .bg-card\/95{
   background-color: hsl(var(--card) / 0.95);
 }
@@ -1972,6 +2009,10 @@ body{
 
 .bg-muted\/30{
   background-color: hsl(var(--muted) / 0.3);
+}
+
+.bg-muted\/40{
+  background-color: hsl(var(--muted) / 0.4);
 }
 
 .bg-muted\/50{
@@ -2211,6 +2252,10 @@ body{
   padding-left: 2rem;
 }
 
+.pl-9{
+  padding-left: 2.25rem;
+}
+
 .pr-1{
   padding-right: 0.25rem;
 }
@@ -2257,6 +2302,10 @@ body{
 
 .text-center{
   text-align: center;
+}
+
+.text-right{
+  text-align: right;
 }
 
 .align-middle{
@@ -2358,6 +2407,26 @@ body{
 
 .tracking-widest{
   letter-spacing: 0.1em;
+}
+
+.text-\[\#04586f\]{
+  --tw-text-opacity: 1;
+  color: rgb(4 88 111 / var(--tw-text-opacity, 1));
+}
+
+.text-\[\#048a94\]{
+  --tw-text-opacity: 1;
+  color: rgb(4 138 148 / var(--tw-text-opacity, 1));
+}
+
+.text-\[\#04b5b1\]{
+  --tw-text-opacity: 1;
+  color: rgb(4 181 177 / var(--tw-text-opacity, 1));
+}
+
+.text-\[\#575c5c\]{
+  --tw-text-opacity: 1;
+  color: rgb(87 92 92 / var(--tw-text-opacity, 1));
 }
 
 .text-accent{
@@ -2465,6 +2534,10 @@ body{
 
 .opacity-0{
   opacity: 0;
+}
+
+.opacity-20{
+  opacity: 0.2;
 }
 
 .opacity-50{
@@ -2705,6 +2778,10 @@ body{
   --tw-enter-scale: .95;
 }
 
+.slide-in-from-bottom-2{
+  --tw-enter-translate-y: 0.5rem;
+}
+
 .slide-in-from-bottom-4{
   --tw-enter-translate-y: 1rem;
 }
@@ -2875,6 +2952,11 @@ body{
   background-color: rgb(4 138 148 / var(--tw-bg-opacity, 1));
 }
 
+.hover\:bg-\[\#2c8f73\]:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(44 143 115 / var(--tw-bg-opacity, 1));
+}
+
 .hover\:bg-accent:hover{
   background-color: hsl(var(--accent));
 }
@@ -2893,6 +2975,10 @@ body{
 
 .hover\:bg-muted:hover{
   background-color: hsl(var(--muted));
+}
+
+.hover\:bg-muted\/20:hover{
+  background-color: hsl(var(--muted) / 0.2);
 }
 
 .hover\:bg-muted\/50:hover{
@@ -3020,6 +3106,11 @@ body{
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 
+.focus\:ring-\[\#04b5b1\]:focus{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(4 181 177 / var(--tw-ring-opacity, 1));
+}
+
 .focus\:ring-accent:focus{
   --tw-ring-color: hsl(var(--accent));
 }
@@ -3030,6 +3121,11 @@ body{
 
 .focus\:ring-offset-2:focus{
   --tw-ring-offset-width: 2px;
+}
+
+.focus-visible\:border-\[\#04b5b1\]:focus-visible{
+  --tw-border-opacity: 1;
+  border-color: rgb(4 181 177 / var(--tw-border-opacity, 1));
 }
 
 .focus-visible\:border-accent:focus-visible{
@@ -3051,6 +3147,11 @@ body{
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+.focus-visible\:ring-\[\#04b5b1\]:focus-visible{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(4 181 177 / var(--tw-ring-opacity, 1));
 }
 
 .focus-visible\:ring-accent:focus-visible{
@@ -3095,6 +3196,11 @@ body{
 
 .disabled\:opacity-50:disabled{
   opacity: 0.5;
+}
+
+.group:focus-within .group-focus-within\:text-\[\#048a94\]{
+  --tw-text-opacity: 1;
+  color: rgb(4 138 148 / var(--tw-text-opacity, 1));
 }
 
 .group:focus-within .group-focus-within\:text-accent{
@@ -3986,6 +4092,10 @@ body{
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .md\:grid-cols-4{
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .md\:flex-row{
     flex-direction: row;
   }
@@ -4196,6 +4306,11 @@ body{
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+.\[\&_\.bg-primary\]\:bg-\[\#048a94\] .bg-primary{
+  --tw-bg-opacity: 1;
+  background-color: rgb(4 138 148 / var(--tw-bg-opacity, 1));
+}
+
 .\[\&_\.recharts-cartesian-axis-tick_text\]\:fill-muted-foreground .recharts-cartesian-axis-tick text{
   fill: hsl(var(--muted-foreground));
 }
@@ -4307,6 +4422,16 @@ body{
 
 .\[\&_\[cmdk-item\]_svg\]\:w-5 [cmdk-item] svg{
   width: 1.25rem;
+}
+
+.\[\&_\[role\=slider\]\]\:border-\[\#048a94\] [role=slider]{
+  --tw-border-opacity: 1;
+  border-color: rgb(4 138 148 / var(--tw-border-opacity, 1));
+}
+
+.\[\&_\[role\=slider\]\]\:focus-visible\:ring-\[\#04b5b1\]:focus-visible [role=slider]{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(4 181 177 / var(--tw-ring-opacity, 1));
 }
 
 .\[\&_p\]\:leading-relaxed p{
