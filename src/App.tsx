@@ -8,7 +8,7 @@ import Layout from './components/Layout'
 import Vagas from './pages/vagas/Vagas'
 import VagasDetalhes from './pages/vagas/VagasDetalhes'
 import BancoTalentos from './pages/banco-talentos/BancoTalentos'
-import { AuthProvider } from './contexts/AuthContext'
+import { AuthProvider } from './hooks/use-auth'
 import { VacanciesProvider } from './contexts/VacanciesContext'
 
 const App = () => (

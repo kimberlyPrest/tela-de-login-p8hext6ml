@@ -1,6 +1,6 @@
 import { Outlet, Navigate, useLocation, Link } from 'react-router-dom'
-import { Briefcase, LogOut, Menu } from 'lucide-react'
-import { useAuth } from '@/contexts/AuthContext'
+import { Briefcase, LogOut, Menu, Loader2 } from 'lucide-react'
+import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -15,8 +15,16 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 
 export default function Layout() {
-  const { isAuthenticated, logout } = useAuth()
+  const { isAuthenticated, signOut, loading, user } = useAuth()
   const location = useLocation()
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
 
   if (!isAuthenticated && location.pathname !== '/') {
     return <Navigate to="/" replace />
@@ -136,16 +144,16 @@ export default function Layout() {
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none text-secondary">
-                      Roberta Costa
+                      {user?.user_metadata?.name || 'Administrador'}
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      roberta@empresa.com
+                      {user?.email || 'admin@example.com'}
                     </p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={logout}
+                  onClick={signOut}
                   className="text-destructive focus:text-destructive cursor-pointer"
                 >
                   <LogOut className="mr-2 h-4 w-4" />

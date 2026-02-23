@@ -15,7 +15,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@/hooks/use-auth'
+import { useToast } from '@/hooks/use-toast'
 import {
   Card,
   CardContent,
@@ -34,7 +35,9 @@ type LoginFormValues = z.infer<typeof loginSchema>
 export default function Index() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const { login } = useAuth()
+  const [isSignUp, setIsSignUp] = useState(false)
+  const { signIn, signUp } = useAuth()
+  const { toast } = useToast()
   const navigate = useNavigate()
 
   const form = useForm<LoginFormValues>({
@@ -48,10 +51,25 @@ export default function Index() {
   async function onSubmit(data: LoginFormValues) {
     setIsLoading(true)
     try {
-      await login()
-      navigate('/vagas')
-    } catch (error) {
-      console.error(error)
+      if (isSignUp) {
+        const { error } = await signUp(data.email, data.password)
+        if (error) throw error
+        toast({
+          title: 'Sucesso',
+          description: 'Conta criada com sucesso! Faça login para continuar.',
+        })
+        setIsSignUp(false)
+      } else {
+        const { error } = await signIn(data.email, data.password)
+        if (error) throw error
+        navigate('/vagas')
+      }
+    } catch (error: any) {
+      toast({
+        title: 'Erro na autenticação',
+        description: error.message || 'Verifique suas credenciais.',
+        variant: 'destructive',
+      })
     } finally {
       setIsLoading(false)
     }
@@ -59,7 +77,6 @@ export default function Index() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background bg-pattern p-4 relative overflow-hidden">
-      {/* Decorative background blobs */}
       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-accent/20 rounded-full blur-3xl opacity-50 pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-primary/20 rounded-full blur-3xl opacity-50 pointer-events-none" />
 
@@ -78,9 +95,13 @@ export default function Index() {
 
         <Card className="border-primary/10 shadow-elevation backdrop-blur-sm bg-card/95">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-semibold">Entrar</CardTitle>
+            <CardTitle className="text-2xl font-semibold">
+              {isSignUp ? 'Criar Conta' : 'Entrar'}
+            </CardTitle>
             <CardDescription>
-              Insira suas credenciais para acessar o painel.
+              {isSignUp
+                ? 'Preencha os dados para criar seu acesso.'
+                : 'Insira suas credenciais para acessar o painel.'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -141,14 +162,16 @@ export default function Index() {
                           </button>
                         </div>
                       </FormControl>
-                      <div className="flex justify-end">
-                        <a
-                          href="#"
-                          className="text-xs text-muted-foreground hover:text-accent font-medium transition-colors"
-                        >
-                          Esqueci minha senha
-                        </a>
-                      </div>
+                      {!isSignUp && (
+                        <div className="flex justify-end">
+                          <a
+                            href="#"
+                            className="text-xs text-muted-foreground hover:text-accent font-medium transition-colors"
+                          >
+                            Esqueci minha senha
+                          </a>
+                        </div>
+                      )}
                       <FormMessage className="text-destructive/90 text-xs font-normal" />
                     </FormItem>
                   )}
@@ -162,14 +185,33 @@ export default function Index() {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      Autenticando...
+                      {isSignUp ? 'Cadastrando...' : 'Autenticando...'}
                     </>
+                  ) : isSignUp ? (
+                    'Criar Conta'
                   ) : (
                     'Entrar'
                   )}
                 </Button>
               </form>
             </Form>
+
+            <div className="mt-6 text-center text-sm">
+              <span className="text-muted-foreground">
+                {isSignUp ? 'Já tem uma conta?' : 'Não tem uma conta?'}
+              </span>{' '}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsSignUp(!isSignUp)
+                  form.reset()
+                }}
+                className="text-primary hover:underline font-medium"
+                disabled={isLoading}
+              >
+                {isSignUp ? 'Faça login' : 'Cadastre-se'}
+              </button>
+            </div>
           </CardContent>
         </Card>
       </div>

@@ -11,6 +11,7 @@ import {
   Search,
   Mail,
   Edit,
+  Loader2,
 } from 'lucide-react'
 import { useVacancies } from '@/contexts/VacanciesContext'
 import { Button } from '@/components/ui/button'
@@ -29,7 +30,15 @@ import { cn } from '@/lib/utils'
 export default function VagasDetalhes() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { vacancies } = useVacancies()
+  const { vacancies, loading } = useVacancies()
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-16 flex items-center justify-center min-h-[50vh]">
+        <Loader2 className="animate-spin h-8 w-8 text-primary" />
+      </div>
+    )
+  }
 
   const vacancy = vacancies.find((v) => v.id === id)
 
@@ -123,7 +132,10 @@ export default function VagasDetalhes() {
               </Button>
             }
           />
-          <Button className="w-full sm:w-auto bg-[#04b5b1] hover:bg-[#048a94] text-white shadow-md tap-effect border-none">
+          <Button
+            onClick={() => navigate(`/banco-talentos?vagaId=${vacancy.id}`)}
+            className="w-full sm:w-auto bg-[#04b5b1] hover:bg-[#048a94] text-white shadow-md tap-effect border-none"
+          >
             <Search className="mr-2 h-4 w-4" /> Buscar no Banco de Talentos
           </Button>
         </div>

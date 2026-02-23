@@ -1,5 +1,14 @@
-import { useState, useMemo } from 'react'
-import { Search, MapPin, Laptop, Smartphone, Filter, Send } from 'lucide-react'
+import { useState, useMemo, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import {
+  Search,
+  MapPin,
+  Laptop,
+  Smartphone,
+  Filter,
+  Send,
+  Loader2,
+} from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,19 +30,55 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Slider } from '@/components/ui/slider'
-import { Candidate, mockCandidates } from '@/lib/mock-data'
+import { Candidate } from '@/lib/mock-data'
 import { useToast } from '@/hooks/use-toast'
+import { getTalentos } from '@/services/talentos'
+import { createConvite } from '@/services/convites'
+import { useVacancies } from '@/contexts/VacanciesContext'
 
 export default function BancoTalentos() {
   const { toast } = useToast()
+  const [searchParams] = useSearchParams()
+  const { vacancies } = useVacancies()
+
+  const [loading, setLoading] = useState(true)
+  const [candidates, setCandidates] = useState<Candidate[]>([])
+
+  const initialVagaId = searchParams.get('vagaId') || ''
+  const [selectedVagaId, setSelectedVagaId] = useState(initialVagaId)
 
   const [filterType, setFilterType] = useState<string>('all')
   const [filterEquipment, setFilterEquipment] = useState<string>('')
   const [filterDistance, setFilterDistance] = useState<number[]>([500])
   const [searchName, setSearchName] = useState<string>('')
 
+  useEffect(() => {
+    if (!selectedVagaId && vacancies.length > 0) {
+      setSelectedVagaId(vacancies[0].id)
+    }
+  }, [vacancies, selectedVagaId])
+
+  useEffect(() => {
+    const fetchTalentos = async () => {
+      try {
+        const data = await getTalentos()
+        setCandidates(data)
+      } catch (e) {
+        console.error(e)
+        toast({
+          title: 'Erro',
+          description: 'Erro ao carregar talentos',
+          variant: 'destructive',
+        })
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchTalentos()
+  }, [toast])
+
   const filteredCandidates = useMemo(() => {
-    return mockCandidates.filter((candidate) => {
+    return candidates.filter((candidate) => {
       if (
         searchName &&
         !candidate.name.toLowerCase().includes(searchName.toLowerCase())
@@ -63,24 +108,70 @@ export default function BancoTalentos() {
 
       return true
     })
-  }, [filterType, filterEquipment, filterDistance, searchName])
+  }, [filterType, filterEquipment, filterDistance, searchName, candidates])
 
-  const handleInvite = (candidate: Candidate) => {
-    toast({
-      title: 'Convite Enviado!',
-      description: `Um convite para a vaga foi enviado para ${candidate.name}.`,
-    })
+  const handleInvite = async (candidate: Candidate) => {
+    if (!selectedVagaId) {
+      toast({
+        title: 'Aviso',
+        description: 'Selecione uma vaga alvo para enviar o convite.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    try {
+      await createConvite({
+        vaga_id: selectedVagaId,
+        talento_id: candidate.id,
+        link_unico: `${window.location.origin}/candidatura/${Math.random().toString(36).substring(7)}`,
+      })
+      toast({
+        title: 'Convite Enviado!',
+        description: `Um convite para a vaga foi enviado para ${candidate.name}.`,
+      })
+    } catch (e) {
+      toast({
+        title: 'Erro',
+        description:
+          'Não foi possível enviar o convite. Pode já existir um para este candidato.',
+        variant: 'destructive',
+      })
+    }
   }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl pb-24 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex flex-col mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-[#04586f] tracking-tight">
-          Banco de Talentos
-        </h1>
-        <p className="text-[#575c5c] mt-1.5">
-          Visualize, filtre e convide os melhores profissionais para suas vagas.
-        </p>
+      <div className="flex flex-col sm:flex-row mb-8 justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-[#04586f] tracking-tight">
+            Banco de Talentos
+          </h1>
+          <p className="text-[#575c5c] mt-1.5">
+            Visualize, filtre e convide os melhores profissionais para suas
+            vagas.
+          </p>
+        </div>
+
+        {vacancies.length > 0 && (
+          <div className="w-full sm:w-72">
+            <label className="text-xs font-semibold text-muted-foreground mb-1 block">
+              Vaga alvo para os convites:
+            </label>
+            <Select value={selectedVagaId} onValueChange={setSelectedVagaId}>
+              <SelectTrigger className="bg-card shadow-sm border-border focus:ring-[#04b5b1]">
+                <SelectValue placeholder="Selecione a vaga" />
+              </SelectTrigger>
+              <SelectContent>
+                {vacancies.map((v) => (
+                  <SelectItem key={v.id} value={v.id}>
+                    {v.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
       </div>
 
       <Card className="mb-8 border-border shadow-sm bg-card/60 backdrop-blur-sm">
@@ -183,7 +274,13 @@ export default function BancoTalentos() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredCandidates.length > 0 ? (
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="h-40 text-center">
+                    <Loader2 className="animate-spin h-8 w-8 mx-auto text-primary" />
+                  </TableCell>
+                </TableRow>
+              ) : filteredCandidates.length > 0 ? (
                 filteredCandidates.map((candidate, index) => (
                   <TableRow
                     key={candidate.id}

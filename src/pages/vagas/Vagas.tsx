@@ -7,6 +7,7 @@ import {
   ArrowRight,
   MoreVertical,
   Briefcase,
+  Loader2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -24,7 +25,15 @@ import { NovaVagaDialog } from '@/components/vagas/NovaVagaDialog'
 import { useVacancies } from '@/contexts/VacanciesContext'
 
 export default function Vagas() {
-  const { vacancies } = useVacancies()
+  const { vacancies, loading } = useVacancies()
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-16 flex items-center justify-center min-h-[50vh]">
+        <Loader2 className="animate-spin h-8 w-8 text-primary" />
+      </div>
+    )
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl pb-24">
@@ -43,26 +52,39 @@ export default function Vagas() {
       </div>
 
       {/* Vacancy Dashboard */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-        {vacancies.map((vacancy, index) => (
-          <div
-            key={vacancy.id}
-            className="animate-in fade-in slide-in-from-bottom-4"
-            style={{
-              animationDelay: `${index * 100}ms`,
-              animationFillMode: 'both',
-            }}
-          >
-            <VacancyCard vacancy={vacancy} />
-          </div>
-        ))}
-      </div>
+      {vacancies.length === 0 ? (
+        <div className="text-center py-16 bg-muted/20 rounded-xl border border-dashed border-border">
+          <Briefcase className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
+          <h2 className="text-xl font-semibold text-secondary mb-2">
+            Nenhuma vaga cadastrada
+          </h2>
+          <p className="text-muted-foreground">
+            Clique em "Nova Vaga" para começar a recrutar.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+          {vacancies.map((vacancy, index) => (
+            <div
+              key={vacancy.id}
+              className="animate-in fade-in slide-in-from-bottom-4"
+              style={{
+                animationDelay: `${index * 100}ms`,
+                animationFillMode: 'both',
+              }}
+            >
+              <VacancyCard vacancy={vacancy} />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
 
 function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
   const navigate = useNavigate()
+  const { deleteVacancy } = useVacancies()
 
   const statusStyles = {
     Ativo: 'bg-success/15 text-success border-success/20',
@@ -135,11 +157,11 @@ function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
                 >
                   Ver Detalhes
                 </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
-                  Duplicar oportunidade
-                </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-destructive focus:text-destructive cursor-pointer">
+                <DropdownMenuItem
+                  onClick={() => deleteVacancy(vacancy.id)}
+                  className="text-destructive focus:text-destructive cursor-pointer"
+                >
                   Excluir vaga
                 </DropdownMenuItem>
               </DropdownMenuContent>

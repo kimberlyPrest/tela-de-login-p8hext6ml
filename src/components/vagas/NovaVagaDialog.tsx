@@ -2,7 +2,14 @@ import { useState, useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { CalendarIcon, Plus, MapPin, Briefcase, Trash2 } from 'lucide-react'
+import {
+  CalendarIcon,
+  Plus,
+  MapPin,
+  Briefcase,
+  Trash2,
+  Loader2,
+} from 'lucide-react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
@@ -105,6 +112,7 @@ export function NovaVagaDialog({
 }: NovaVagaDialogProps) {
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState(1)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const { addVacancy, updateVacancy } = useVacancies()
 
   const isEditMode = !!vacancy
@@ -139,7 +147,6 @@ export function NovaVagaDialog({
   })
 
   useEffect(() => {
-    // Only auto-update if not in edit mode, or if the user actively changes the type
     if (!isEditMode || watchType !== vacancy?.type) {
       if (watchType === 'Home Office') {
         form.setValue(
@@ -173,37 +180,40 @@ export function NovaVagaDialog({
     }
   }
 
-  const onSubmit = (data: FormValues) => {
-    const vacancyData = {
-      title: data.title,
-      service: data.service,
-      value: Number(data.value),
-      type: data.type as any,
-      serviceDate: data.serviceDate.toISOString().split('T')[0],
-      availability: data.availability,
-      requirements: data.requirements,
-      training: data.training,
-      contact: data.contact,
-      cep: data.cep,
-      distance: data.distance,
-      equipmentQuestion: data.equipmentQuestion,
-      customQuestions: data.customQuestions,
-    }
+  const onSubmit = async (data: FormValues) => {
+    try {
+      setIsSubmitting(true)
+      const vacancyData = {
+        title: data.title,
+        service: data.service,
+        value: Number(data.value),
+        type: data.type as any,
+        serviceDate: data.serviceDate.toISOString().split('T')[0],
+        availability: data.availability,
+        requirements: data.requirements,
+        training: data.training,
+        contact: data.contact,
+        cep: data.cep,
+        distance: data.distance,
+        equipmentQuestion: data.equipmentQuestion,
+        customQuestions: data.customQuestions,
+      }
 
-    if (isEditMode && vacancy) {
-      updateVacancy(vacancy.id, vacancyData)
-    } else {
-      addVacancy({
-        id: Math.random().toString(36).substr(2, 9),
-        status: 'Ativo',
-        ...vacancyData,
-      })
-    }
+      if (isEditMode && vacancy) {
+        await updateVacancy(vacancy.id, vacancyData)
+      } else {
+        await addVacancy({ status: 'Ativo', ...vacancyData })
+      }
 
-    setOpen(false)
-    setStep(1)
-    if (!isEditMode) {
-      form.reset()
+      setOpen(false)
+      setStep(1)
+      if (!isEditMode) {
+        form.reset()
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -659,6 +669,7 @@ export function NovaVagaDialog({
                     variant="outline"
                     onClick={() => setStep(step - 1)}
                     className="border-border hover:bg-muted"
+                    disabled={isSubmitting}
                   >
                     Voltar
                   </Button>
@@ -668,6 +679,7 @@ export function NovaVagaDialog({
                     variant="ghost"
                     onClick={() => setOpen(false)}
                     className="text-muted-foreground hover:text-secondary"
+                    disabled={isSubmitting}
                   >
                     Cancelar
                   </Button>
@@ -684,9 +696,16 @@ export function NovaVagaDialog({
                 ) : (
                   <Button
                     type="submit"
+                    disabled={isSubmitting}
                     className="bg-success hover:bg-success/90 text-white min-w-[120px] shadow-sm tap-effect"
                   >
-                    {isEditMode ? 'Salvar Vaga' : 'Criar Vaga'}
+                    {isSubmitting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : isEditMode ? (
+                      'Salvar Vaga'
+                    ) : (
+                      'Criar Vaga'
+                    )}
                   </Button>
                 )}
               </div>
